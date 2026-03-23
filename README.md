@@ -23,13 +23,16 @@ It focuses on one operational decision:
 
 ## What You Get
 
-With `watchdog-shrimp`, an OpenClaw agent is much more likely to:
+After `watchdog-shrimp` is actually integrated into OpenClaw, an agent is much more likely to:
 
 1. Execute low-risk work directly instead of asking again.
 2. Ask one short confirmation for medium-risk work, then wait for an explicit reply.
 3. Hard-stop on destructive, privileged, costly, external, or OpenClaw-core actions.
 4. Escalate OpenClaw-specific surfaces more aggressively than generic developer tasks.
 5. Stay honest about the boundary between skill-layer guidance and runtime enforcement.
+
+Installation alone does not create that effect.
+This repository needs real OpenClaw injection to become active governance.
 
 ## Core Behavior
 
@@ -62,9 +65,20 @@ Combining plugin install + config mutation + restart is always `HIGH`.
 - Result: shared config, gateway, or delivery behavior can break.
 
 **With `watchdog-shrimp`**
-- The same request is escalated as OpenClaw-sensitive.
+- After the skill is wired into real OpenClaw entry points, the same request is escalated as OpenClaw-sensitive.
 - Agent asks for explicit confirmation, states impact, and routes toward guarded install / recovery lanes when needed.
 - Result: lower friction on safe work, higher friction where it actually matters.
+
+## Installation Is Not Activation
+
+This repository is a governance package.
+It does not automatically become live behavior just because it exists on disk or is installed somewhere.
+
+To affect actual OpenClaw execution, it must be injected through a real entry point such as:
+
+- `AGENTS.md`
+- standing orders
+- runtime approval policy
 
 ## What This Skill Does Well
 
@@ -92,6 +106,8 @@ If the requirement is guaranteed blocking of dangerous actions, that belongs in 
 - `watchdog-shrimp/references/examples.md`: example triggers and boundaries
 - `watchdog-shrimp/references/checklist.md`: execution checklist
 - `watchdog-shrimp/evals/evals.json`: seed eval cases
+- `watchdog-shrimp/evals/README.md`: local eval usage notes
+- `tooling/validate-evals.js`: local eval structure validator
 - `docs/requirements.md`: original product requirements
 - `docs/design.md`: design notes and layer model
 - `docs/mvp-roadmap.md`: MVP and runtime follow-up roadmap
@@ -145,8 +161,15 @@ Good smoke tests:
 
 The point is not just to classify risk.
 The point is to send risky work into the right protective lane.
+If those companion workflows do not exist in a given OpenClaw environment, the agent should say so explicitly rather than pretending they are already available.
 
 ## Validation
+
+Run the local validator with:
+
+```bash
+npm run validate:evals
+```
 
 This repository currently ships seed eval cases for:
 
@@ -157,6 +180,9 @@ This repository currently ships seed eval cases for:
 - plugin failure and recovery routing
 - internal send vs external or broadcast send
 - paid API and cross-instance actions
+
+The local validator checks structure and coverage sanity for those eval seeds.
+It is not yet a live model-scoring harness.
 
 The eval set is still seed data, not a full executable runner.
 That is an honest current limitation, not a hidden one.

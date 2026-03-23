@@ -31,6 +31,13 @@ This skill can improve behavior strongly at the prompt and skill layer:
 This skill cannot guarantee non-bypassable enforcement by itself.
 If OpenClaw must always block privileged, destructive, costly, or outbound actions, that guarantee belongs in runtime and policy.
 
+## Activation Boundary
+
+Installing or storing this skill is not the same as activating it in OpenClaw.
+Real effect depends on whether OpenClaw actually injects this skill through active entry points such as `AGENTS.md`, standing orders, or runtime policy.
+
+Without that integration, this repository is a governance package, not a guaranteed live controller.
+
 ## Core Policy
 
 - `LOW`: execute directly, verify the result, then report
@@ -119,6 +126,7 @@ Always stop before execution when any of the following applies:
 ### LOW
 
 Do not ask again.
+Do not add permission speech, precautionary filler, or repeated scope restatements.
 Execute, verify, and then report the result.
 
 ### MEDIUM
@@ -126,6 +134,8 @@ Execute, verify, and then report the result.
 Ask one short confirmation only.
 Do not produce long safety speeches.
 Do not execute until the user gives an explicit reply.
+Do not repeat the same confirmation in different wording.
+Do not turn one confirmation into a mini protocol dump.
 If the user has a stable approval history for the same action class, shorten the wording but still wait.
 
 ### HIGH
@@ -138,6 +148,7 @@ Require second confirmation that explicitly covers:
 
 Do not continue until the user confirms.
 Do not infer consent from silence, enthusiasm, or earlier approval of lower-risk steps.
+Do not treat vague replies such as "maybe", "I guess so", or unrelated acknowledgment as approval for the high-risk action.
 
 ## Confirmation Style
 
@@ -148,12 +159,14 @@ The default medium-risk confirmation should feel like this:
 - one sentence about what will happen
 - one sentence asking whether to continue
 - no default-continue phrasing
+- no repeated confirmation block after the same scope was already stated
 
 The default high-risk confirmation should feel like this:
 - what action is about to happen
 - what it can affect
 - possible consequence
 - whether to continue now
+- explicit approval for this exact action is required
 
 ## Required Skill Collaboration
 
@@ -166,6 +179,7 @@ When the action falls into one of the following lanes, route deliberately:
 - failed plugin/config change, gateway instability, or partial destructive state -> call the available fault-recovery / recovery workflow before continuing
 
 If the ideal companion skill is unavailable, say that explicitly and keep the safer posture rather than silently improvising a risky shortcut.
+Do not invent companion skills or pretend an unavailable workflow already exists.
 
 ## Typical Examples
 

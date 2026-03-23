@@ -59,10 +59,13 @@ State the possible consequence explicitly.
 - if the action touches `~/.openclaw/openclaw.json`, plugins, gateway, delivery, or shared routing, say that directly
 - if the action is only a read or recommendation, do not ask for confirmation just because the surface is sensitive
 - if a medium-risk action is repeatedly approved, shorten wording but still wait for a reply
+- do not repeat the same confirmation twice for the same scope
+- do not treat vague enthusiasm or unrelated acknowledgment as approval for a high-risk action
 
 ## Tone Rules
 
 - low risk: no permission speech
 - medium risk: one short confirmation only
 - high risk: concise but explicit
+- no filler, no duplicate confirmation blocks
 - never mix Chinese and English headings in the same reply

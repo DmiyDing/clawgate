@@ -23,13 +23,16 @@
 
 ## 你会得到什么
 
-有了 `watchdog-shrimp`，OpenClaw 更有可能做到：
+当 `watchdog-shrimp` 被真实接入 OpenClaw 后，Agent 更有可能做到：
 
 1. 低风险任务直接执行，而不是重复确认。
 2. 中风险任务只做一次简短确认，并等待用户明确回复。
 3. 对破坏性、提权、成本敏感、外发、以及 OpenClaw 核心变更类动作硬停。
 4. 用 OpenClaw 语境升级风险，而不是套普通开发环境的经验法则。
 5. 对 skill 层能力和 runtime 层能力边界保持诚实。
+
+仅仅安装仓库本身，并不会自动产生这些效果。
+它必须被真实注入到 OpenClaw 执行入口里，才会变成有效治理。
 
 ## 核心行为
 
@@ -62,9 +65,20 @@
 - 结果：共享配置、gateway 或 delivery 行为可能被直接打坏。
 
 **有了 `watchdog-shrimp`**
-- 同样的请求会被识别成 OpenClaw 敏感动作。
+- 当这个 skill 被真正接入 OpenClaw 入口后，同样的请求才会被识别成 OpenClaw 敏感动作。
 - Agent 会先说明影响、等待显式确认，并在需要时导向 guarded installer / recovery 这类保护通道。
 - 结果：该顺滑的地方顺滑，该拦住的地方真正拦住。
+
+## 安装不等于激活
+
+这个仓库本质上是一个治理规则包。
+它不会因为“放在磁盘上”或“被安装了”就自动变成正在生效的行为。
+
+如果希望它真实影响 OpenClaw 执行，必须通过真实入口注入，例如：
+
+- `AGENTS.md`
+- standing orders
+- runtime approval policy
 
 ## 这个 Skill 擅长什么
 
@@ -92,6 +106,8 @@
 - `watchdog-shrimp/references/examples.md`：示例与边界
 - `watchdog-shrimp/references/checklist.md`：执行检查清单
 - `watchdog-shrimp/evals/evals.json`：评测种子样例
+- `watchdog-shrimp/evals/README.md`：本地评测说明
+- `tooling/validate-evals.js`：本地 eval 结构校验脚本
 - `docs/requirements.md`：原始产品需求
 - `docs/design.md`：设计说明与分层模型
 - `docs/mvp-roadmap.md`：MVP 与 runtime 后续路线图
@@ -145,8 +161,15 @@
 
 重点不只是分类风险。
 重点是把高风险动作送进正确的保护通道。
+如果这些配套流程在某个 OpenClaw 环境里并不存在，Agent 应该明确说没有，而不是假装它们已经可用。
 
 ## 验证
+
+本地可运行：
+
+```bash
+npm run validate:evals
+```
 
 当前仓库提供的评测种子已覆盖：
 
@@ -157,6 +180,9 @@
 - 插件失败后的恢复路由
 - 对内发送 vs 对外或群发发送
 - 付费 API 与跨实例动作
+
+本地校验脚本会检查这些 eval 种子的结构正确性和覆盖面完整性。
+它还不是一个实时模型打分 harness。
 
 这些评测目前仍是种子数据，不是完整可执行 runner。
 这是当前真实边界，不是隐藏问题。

@@ -20,6 +20,7 @@ Default examples:
 
 Behavior:
 - do not ask again
+- do not add permission preamble
 - execute now
 - verify outcome
 - report result
@@ -39,6 +40,7 @@ Behavior:
 - ask exactly one short confirmation
 - keep it concise
 - wait for explicit user confirmation
+- do not repeat the same confirmation in multiple phrasings
 - if user confirms, execute immediately
 
 ## HIGH
@@ -61,6 +63,7 @@ Behavior:
 - confirm impact
 - confirm consequence
 - ask continue or cancel
+- require explicit approval for the exact high-risk action
 
 ## OpenClaw Escalation Rules
 
@@ -84,6 +87,7 @@ Classification rules:
 - repeated approvals may not skip confirmation entirely unless a stronger standing order already grants that authority
 - `HIGH` never downgrades because of user preference memory alone
 - when memory conflicts with the current request, trust the current request and the safer risk class
+- `LOW` should not be upgraded into a confirmation loop just because the model feels cautious
 
 ## Skill Routing Rules
 
@@ -91,6 +95,7 @@ Classification rules:
 - core config mutation before execution -> route to available OpenClaw health protection / healthcheck workflow
 - plugin install/remove/update -> route to available safe installer workflow when present
 - failed plugin/config change or unstable gateway after mutation -> route to available recovery workflow
+- if those workflows are unavailable, say so explicitly instead of implying they are present
 
 ## Special Cases
 

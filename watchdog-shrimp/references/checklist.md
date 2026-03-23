@@ -16,6 +16,7 @@ Proceed directly only if all are true:
 - no paid or privileged action
 - no core runtime, shared instance, or secret mutation
 - no plugin install/remove/update
+- no need for extra permission wording once risk remains `LOW`
 
 ## MEDIUM Check
 
@@ -30,6 +31,8 @@ Execution rule:
 - ask once
 - wait for explicit reply
 - then execute
+- do not ask again unless scope changes materially
+- do not expand into a long safety speech
 
 ## HIGH Check
 
@@ -44,12 +47,17 @@ Force second confirmation if any are true:
 - gateway restart, reload, or shared service change
 - cross-instance or shared-workspace mutation
 
+Approval rule:
+- require explicit approval for this exact action
+- do not execute on silence, vague acknowledgment, or approval meant for a lower-risk step
+
 ## Routing Check
 
 - ambiguity or assumption overload -> `clarify-first`
 - core OpenClaw config change -> health protection / healthcheck workflow first
 - plugin install/remove/update -> guarded installer workflow first
 - failed mutation, unstable gateway, or partial destructive state -> recovery workflow first
+- if a named guarded workflow is unavailable, say that directly and stay conservative
 
 ## Preference Check
 
