@@ -111,11 +111,7 @@ If the requirement is guaranteed blocking of dangerous actions, that belongs in 
 - `watchdog-shrimp/references/agents-snippet.md`: single-source AGENTS activation snippet
 - `tooling/validate-evals.js`: local eval structure validator
 - `tooling/check-activation.js`: AGENTS activation drift checker
-- `docs/requirements.md`: original product requirements
-- `docs/design.md`: design notes and layer model
-- `docs/mvp-roadmap.md`: MVP and runtime follow-up roadmap
-- `docs/clawhub-publish.md`: ClawHub upload notes and checklist
-- `docs/runtime-guard-plan.md`: next-phase runtime hard-stop plan
+- `tooling/check-workspace-sync.js`: workspace skill drift checker
 
 ## Quick Start
 
@@ -286,7 +282,11 @@ npm run validate
 clawhub publish watchdog-shrimp --version 0.1.0
 ```
 
-Use [`docs/clawhub-publish.md`](./docs/clawhub-publish.md) as the release checklist before uploading.
+Suggested release checks before uploading:
+
+- `npm run validate`
+- `npm run validate:workspace-sync`
+- confirm `README`, `SKILL`, and `agents-snippet.md` still agree on `LOW` / `MEDIUM` / `HIGH`
 
 ## Skill vs Runtime Boundary
 
@@ -330,4 +330,3 @@ That is the right open-source posture:
 - structured enough to inform future runtime policy design
 
 If the goal becomes "high-risk actions never slip through", the next phase is runtime work.
-See [`docs/runtime-guard-plan.md`](./docs/runtime-guard-plan.md).

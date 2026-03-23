@@ -182,6 +182,8 @@ When the action falls into one of the following lanes, route deliberately:
 
 If the ideal companion skill is unavailable, say that explicitly and keep the safer posture rather than silently improvising a risky shortcut.
 Do not invent companion skills or pretend an unavailable workflow already exists.
+Failed plugin install followed by manual manifest surgery is not a normal `HIGH` confirmation flow.
+The default behavior is stop-and-route-to-recovery.
 
 ## Typical Examples
 

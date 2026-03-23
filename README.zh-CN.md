@@ -111,11 +111,7 @@
 - `watchdog-shrimp/references/agents-snippet.md`：单一来源的 AGENTS 激活片段
 - `tooling/validate-evals.js`：本地 eval 结构校验脚本
 - `tooling/check-activation.js`：AGENTS 激活漂移检查脚本
-- `docs/requirements.md`：原始产品需求
-- `docs/design.md`：设计说明与分层模型
-- `docs/mvp-roadmap.md`：MVP 与 runtime 后续路线图
-- `docs/clawhub-publish.md`：ClawHub 上传说明与检查清单
-- `docs/runtime-guard-plan.md`：下一阶段 runtime 硬阻断方案
+- `tooling/check-workspace-sync.js`：workspace 生效副本漂移检查脚本
 
 ## 快速接入
 
@@ -286,7 +282,11 @@ npm run validate
 clawhub publish watchdog-shrimp --version 0.1.0
 ```
 
-正式上传前，请按 [`docs/clawhub-publish.md`](./docs/clawhub-publish.md) 做一遍发布检查。
+正式上传前，至少做这几步检查：
+
+- `npm run validate`
+- `npm run validate:workspace-sync`
+- 确认 `README`、`SKILL`、`agents-snippet.md` 对 `LOW` / `MEDIUM` / `HIGH` 的口径完全一致
 
 ## Skill 与 Runtime 的边界
 
@@ -330,4 +330,3 @@ clawhub publish watchdog-shrimp --version 0.1.0
 - 结构足够清晰，能为未来 runtime policy 设计提供输入
 
 如果目标升级成“高风险永不偷跑”，下一阶段就必须进入 runtime。
-见 [`docs/runtime-guard-plan.md`](./docs/runtime-guard-plan.md)。
