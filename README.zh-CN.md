@@ -252,6 +252,12 @@ node tooling/check-activation.js
 npm run validate:workspace-sync
 ```
 
+在 CI 或发布门禁里运行严格校验：
+
+```bash
+npm run validate:ci
+```
+
 当前仓库提供的评测种子已覆盖：
 
 - 应保持 `LOW` 的只读检查

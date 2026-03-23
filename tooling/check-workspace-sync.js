@@ -36,9 +36,12 @@ const relativeFiles = [
   "SKILL.md",
   path.join("references", "agents-snippet.md"),
   path.join("references", "checklist.md"),
+  path.join("references", "confirmation-templates.md"),
   path.join("references", "examples.md"),
   path.join("references", "risk-matrix.md"),
+  path.join("evals", "README.md"),
   path.join("evals", "evals.json"),
+  path.join("evals", "openclaw-prompts.md"),
 ];
 
 function sha256(text) {

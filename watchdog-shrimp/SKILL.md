@@ -120,7 +120,7 @@ Always stop before execution when any of the following applies:
 - delete, overwrite, bulk replace, migrate, deploy, publish, or external-send without explicit approval
 - root, sudo, elevated, or policy-bypassing execution
 - paid API usage or actions that can create direct cost
-- outbound messages to external users, customers, groups, public channels, or delivery integrations
+- outbound messages that cross the current organization boundary, reach external users or customers, target public or broadcast channels, or touch identity-sensitive delivery integrations
 - credential, secret, token, billing, identity, approval, or router-sensitive surfaces
 - OpenClaw plugin install/remove/update that changes permissions, runtime behavior, or shared integrations
 - changes to `~/.openclaw/openclaw.json`, gateway behavior, delivery routing, plugin entries, or shared instance configuration

@@ -108,8 +108,8 @@ Reading config, summarizing risk, and proposing commands is still `LOW` if no mu
 
 ### External send is never LOW
 
-If the action sends content outside the current agent boundary, treat it as at least `MEDIUM`.
-Customer-facing, public, identity-sensitive, or broadcast sends are `HIGH`.
+Internal team delivery may remain `MEDIUM`.
+Any outbound send that crosses the current organization boundary, reaches customers or external users, targets a public or broadcast channel, or touches identity-sensitive delivery is `HIGH`.
 
 ### Core configuration escalates
 

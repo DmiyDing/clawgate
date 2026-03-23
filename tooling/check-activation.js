@@ -18,7 +18,7 @@ function normalize(text) {
 }
 
 function extractSnippet(markdown) {
-  const match = markdown.match(/```md\n([\s\S]*?)\n```/);
+  const match = markdown.match(/```(?:md|markdown)?[ \t]*\n([\s\S]*?)\n```/i);
   if (!match) {
     throw new Error("could not find fenced markdown snippet in agents-snippet.md");
   }

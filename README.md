@@ -252,6 +252,12 @@ Check whether the active workspace copy has drifted from this repository:
 npm run validate:workspace-sync
 ```
 
+Run strict gate checks for CI or release automation:
+
+```bash
+npm run validate:ci
+```
+
 This repository currently ships seed eval cases for:
 
 - read-only inspection that should remain `LOW`

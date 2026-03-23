@@ -5,9 +5,12 @@
   "license": "Apache-2.0",
   "scripts": {
     "validate": "npm run validate:evals && npm run validate:activation",
+    "validate:ci": "npm run validate:evals && npm run validate:activation:strict && npm run validate:workspace-sync:strict",
     "validate:evals": "node tooling/validate-evals.js",
     "validate:activation": "node tooling/check-activation.js --warn-only",
-    "validate:workspace-sync": "node tooling/check-workspace-sync.js --warn-only"
+    "validate:activation:strict": "node tooling/check-activation.js",
+    "validate:workspace-sync": "node tooling/check-workspace-sync.js --warn-only",
+    "validate:workspace-sync:strict": "node tooling/check-workspace-sync.js"
   },
   "files": [
     "watchdog-shrimp",

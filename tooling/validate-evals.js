@@ -5,6 +5,14 @@ const path = require("path");
 
 const root = path.resolve(__dirname, "..");
 const evalPath = path.join(root, "watchdog-shrimp", "evals", "evals.json");
+const requiredScenarioTags = [
+  "openclaw-readonly",
+  "medium-direct",
+  "openclaw-plugin-change",
+  "recovery-route",
+  "activation-boundary",
+  "external-send",
+];
 
 const allowedRiskLevels = new Set(["LOW", "MEDIUM", "HIGH"]);
 const expectedBehaviorByRisk = {
@@ -97,6 +105,14 @@ evals.forEach((entry, index) => {
     fail(`${label} with should_trigger=false must use informational-no-governance-gate`);
   }
 
+  if (entry.should_trigger === true && entry.expected_behavior === "informational-no-governance-gate") {
+    fail(`${label} with should_trigger=true must not use informational-no-governance-gate`);
+  }
+
+  if (entry.should_trigger === false && entry.risk_level !== "LOW") {
+    fail(`${label} with should_trigger=false must use risk_level LOW`);
+  }
+
   if ("must_not" in entry) {
     if (!Array.isArray(entry.must_not) || entry.must_not.length === 0) {
       fail(`${label}.must_not must be a non-empty array when provided`);
@@ -104,31 +120,21 @@ evals.forEach((entry, index) => {
       fail(`${label}.must_not must contain only non-empty strings`);
     }
   }
+
+  if (!Array.isArray(entry.scenario_tags) || entry.scenario_tags.length === 0) {
+    fail(`${label}.scenario_tags must be a non-empty array`);
+  } else if (entry.scenario_tags.some((item) => typeof item !== "string" || !item.trim())) {
+    fail(`${label}.scenario_tags must contain only non-empty strings`);
+  }
 });
 
-const hasInformational = evals.some(
-  (entry) => entry.should_trigger === false && entry.expected_behavior === "informational-no-governance-gate"
-);
-const hasOpenClawSensitiveHigh = evals.some(
-  (entry) =>
-    entry.risk_level === "HIGH" &&
-    /openclaw\.json|plugins\.entries|gateway|delivery router|shared OpenClaw instance/i.test(entry.query)
-);
-const hasReadOnlyOpenClawLow = evals.some(
-  (entry) =>
-    entry.risk_level === "LOW" &&
-    /openclaw\.json|gateway config/i.test(entry.query) &&
-    /without changing|without editing|summarize|tell me/i.test(entry.query)
-);
-const hasRecoveryRoute = evals.some((entry) => entry.expected_behavior === "stop-and-route-to-recovery");
-const hasGatewayRecoveryRoute = evals.some(
-  (entry) =>
-    entry.expected_behavior === "stop-and-route-to-recovery" &&
-    /gateway failed|manifest by hand|plugin install failed/i.test(entry.query)
-);
-const hasExternalSendHigh = evals.some(
-  (entry) => entry.risk_level === "HIGH" && /customer|external|group right now|broadcast/i.test(entry.query)
-);
+const hasTag = (tag) => evals.some((entry) => Array.isArray(entry.scenario_tags) && entry.scenario_tags.includes(tag));
+const hasInformational = hasTag("informational");
+const hasOpenClawSensitiveHigh = hasTag("openclaw-plugin-change") || hasTag("openclaw-config-mutation");
+const hasReadOnlyOpenClawLow = hasTag("openclaw-readonly");
+const hasRecoveryRoute = hasTag("recovery-route");
+const hasGatewayRecoveryRoute = hasTag("failed-plugin-install") || hasTag("gateway-failure");
+const hasExternalSendHigh = hasTag("external-send");
 const hasLowNoPermissionConstraint = evals.some(
   (entry) => entry.risk_level === "LOW" && Array.isArray(entry.must_not) && entry.must_not.includes("ask-for-permission-first")
 );
@@ -147,7 +153,8 @@ const hasHighNoImplicitConsentConstraint = evals.some(
 );
 const hasActivationBoundaryConstraint = evals.some(
   (entry) =>
-    /AGENTS\.md|activation/i.test(entry.query) &&
+    Array.isArray(entry.scenario_tags) &&
+    entry.scenario_tags.includes("activation-boundary") &&
     Array.isArray(entry.must_not) &&
     entry.must_not.includes("auto-edit-agents-md")
 );
@@ -196,6 +203,12 @@ if (!hasHighNoImplicitConsentConstraint) {
 
 if (!hasActivationBoundaryConstraint) {
   fail("expected at least one activation-boundary eval that forbids automatic AGENTS.md edits");
+}
+
+for (const tag of requiredScenarioTags) {
+  if (!hasTag(tag)) {
+    fail(`expected at least one eval tagged with "${tag}"`);
+  }
 }
 
 if (process.exitCode && process.exitCode !== 0) {

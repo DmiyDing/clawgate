@@ -24,6 +24,7 @@ npm run validate:evals
 The validator checks:
 
 - JSON structure and required keys
+- `scenario_tags` structure and minimum coverage labels
 - allowed risk levels and behavior labels
 - optional `must_not` anti-pattern lists
 - duplicate query prevention
