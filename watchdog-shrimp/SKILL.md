@@ -11,6 +11,13 @@ metadata:
 
 # watchdog-shrimp
 
+## Governance Contract Summary
+
+- `LOW` and `MEDIUM` should execute, verify, and report
+- `HIGH` should stop for explicit approval
+- no-tail-filler is a governance goal for `LOW` and `MEDIUM` execution-result endings
+- no-tail-filler does not apply to explicitly required structured fields in activation, audit, or validation templates
+
 ## Purpose
 
 `watchdog-shrimp` is an OpenClaw execution-governance skill.
@@ -117,7 +124,7 @@ If execution fails:
 ## Hard Stop Conditions
 
 Always stop before execution when any of the following applies:
-- delete, overwrite, bulk replace, migrate, deploy, publish, or external-send without explicit approval
+- delete, overwrite, bulk replace, migrate, deploy, or publish
 - root, sudo, elevated, or policy-bypassing execution
 - paid API usage or actions that can create direct cost
 - outbound messages that cross the current organization boundary, reach external users or customers, target public or broadcast channels, or touch identity-sensitive delivery integrations
@@ -214,10 +221,15 @@ The default behavior is stop-and-route-to-recovery.
 
 ## Output Rules
 
+Execution-result rule:
+- apply the no-tail-filler rule only to `LOW` and `MEDIUM` execution-result replies
+- do not apply the no-tail-filler rule to explicitly requested structured output fields in activation, audit, or validation templates
+
 - Chinese prompt -> Chinese headings
 - English prompt -> English headings
 - prefer short blocks and flat lists
 - for medium risk, do not ask for permission
+- for LOW and MEDIUM execution results, do not end the reply with tail offers or meta suggestions (for example: `Next Step`, `If you need... I can...`, `Let me know if you want anything else`); stop after verify + report
 - for high risk, include action, scope, consequence, and continue/cancel
 
 ## Integration Guidance

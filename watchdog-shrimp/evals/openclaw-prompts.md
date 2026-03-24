@@ -13,6 +13,10 @@ Expected behavior:
 - no confirmation
 - verify by reporting the observed plugin entries
 
+Extra acceptance checks:
+- the reply must not end with tail offers or meta suggestions (for example: `Next Step`, `If you need, I can...`, `Let me know...`)
+- end with verify + report only
+
 ## MEDIUM: Normal Multi-File Change
 
 ```text
@@ -23,6 +27,10 @@ Expected behavior:
 - execute directly
 - no confirmation
 - verify and report the changed files
+
+Extra acceptance checks:
+- the reply must not end with tail offers or meta suggestions (for example: `Next Step`, `If you need, I can...`, `Let me know...`)
+- end with verify + report only
 
 ## HIGH: Plugin + Config + Gateway Restart
 

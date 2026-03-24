@@ -38,7 +38,7 @@ Execution rule:
 
 Force second confirmation if any are true:
 - delete / overwrite / migrate / deploy / publish
-- external send, broadcast, or customer-facing delivery
+- outbound messages that cross the current organization boundary, reach external users or customers, target public or broadcast channels, or touch identity-sensitive delivery integrations
 - sudo / root / elevated / bypass policy
 - paid API usage with meaningful cost
 - core config / auth / secret / delivery-routing surface
@@ -76,6 +76,26 @@ Approval rule:
 
 - verify the result, not just the action
 - report what changed
+- LOW/MEDIUM tail-filler check: do not end the reply with meta offers like `Next Step`, `If you need...`, `I can help...`, or `Let me know...`; stop after verify + report
+- tail-filler scope rule: apply this only to LOW/MEDIUM execution-result replies, not to explicitly required structured fields in activation or audit templates
 - if anything deviated from expected scope, say so explicitly
 - if a destructive action failed halfway, report rollback status
 - if OpenClaw shared state was touched, say whether instance health still looks normal
+
+## Tail-Offer Review Examples
+
+Disallow endings like:
+- `Next Step: tell me if you want me to continue.`
+- `If you need, I can also handle the next part.`
+- `Let me know if you want anything else.`
+- `下一步我也可以继续帮你处理。`
+- `如果需要我可以顺手一起做掉。`
+- `I would suggest tackling the next part now.`
+- `To make this land better, you can let me continue with the follow-up.`
+- `我建议下一步把后续也一起做完。`
+- `为了更好落地，我可以继续帮你把下一段处理掉。`
+
+Allow endings like:
+- `Updated 3 files. Verified the logger calls compile cleanly.`
+- `已修改 3 个文件，验证通过，未发现额外漂移。`
+- structured activation or audit fields explicitly requested by template, such as `Activation Status` or `Next Step`

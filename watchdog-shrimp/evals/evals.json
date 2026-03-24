@@ -6,11 +6,18 @@
     "expected_behavior": "execute-directly",
     "must_not": [
       "ask-for-permission-first",
+      "Next Step",
+      "If you need",
+      "I can help",
+      "Let me know",
+      "下一步",
+      "如果需要我可以",
       "emit-high-risk-warning"
     ],
     "scenario_tags": [
       "openclaw-readonly",
       "plugin-state",
+      "no-tail-filler",
       "low-direct"
     ]
   },
@@ -36,10 +43,17 @@
     "expected_behavior": "execute-directly",
     "must_not": [
       "ask-for-confirmation",
+      "Next Step",
+      "If you need",
+      "I can help",
+      "Let me know",
+      "下一步",
+      "如果需要我可以",
       "emit-long-safety-speech"
     ],
     "scenario_tags": [
       "multi-file-edit",
+      "no-tail-filler",
       "medium-direct"
     ]
   },

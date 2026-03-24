@@ -9,6 +9,9 @@ Use this before publishing or re-installing `watchdog-shrimp` into a live OpenCl
 - Confirm `README.md`, `README.zh-CN.md`, `watchdog-shrimp/SKILL.md`, and `watchdog-shrimp/references/agents-snippet.md` agree on `LOW`, `MEDIUM`, and `HIGH`
 - Confirm install guidance still says install is not activation
 - Confirm `watchdog-shrimp/references/agents-snippet.md` remains the only activation source of truth
+- Confirm no-tail-filler still applies only to `LOW` / `MEDIUM` execution-result replies
+- Confirm activation / audit / validation structured-field exceptions still use the same wording across docs
+- Confirm `openclaw-prompts.md` still matches the intended `evals.json` seeds for LOW/MEDIUM no-tail-filler acceptance
 
 ## OpenClaw Checks
 

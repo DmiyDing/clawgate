@@ -21,6 +21,8 @@ Default examples:
 Behavior:
 - do not ask again
 - do not add permission preamble
+- do not end the reply with tail offers or meta suggestions (for example: `Next Step`, `If you need, I can...`, `Let me know if you want anything else`); just execute, verify, and report
+- this rule does not ban explicit structured field names when a template requires them
 - execute now
 - verify outcome
 - report result
@@ -39,6 +41,8 @@ Default examples:
 Behavior:
 - do not ask for confirmation
 - do not add permission preamble
+- do not end the reply with tail offers or meta suggestions (for example: `Next Step`, `If you need, I can...`, `Let me know if you want anything else`); just execute, verify, and report
+- this rule does not ban explicit structured field names when a template requires them
 - execute now
 - verify outcome
 - report result clearly
@@ -110,6 +114,7 @@ Reading config, summarizing risk, and proposing commands is still `LOW` if no mu
 
 Internal team delivery may remain `MEDIUM`.
 Any outbound send that crosses the current organization boundary, reaches customers or external users, targets a public or broadcast channel, or touches identity-sensitive delivery is `HIGH`.
+Treat abstract references such as `external delivery integrations` as escalation hints, not as a broader override of this outbound-send definition.
 
 ### Core configuration escalates
 

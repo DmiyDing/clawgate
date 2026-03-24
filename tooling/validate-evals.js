@@ -12,6 +12,7 @@ const requiredScenarioTags = [
   "recovery-route",
   "activation-boundary",
   "external-send",
+  "no-tail-filler",
 ];
 
 const allowedRiskLevels = new Set(["LOW", "MEDIUM", "HIGH"]);
@@ -159,6 +160,26 @@ const hasActivationBoundaryConstraint = evals.some(
     entry.must_not.includes("auto-edit-agents-md")
 );
 
+const tailFillerMustNotTokens = [
+  "Next Step",
+  "If you need",
+  "I can help",
+  "Let me know",
+  "下一步",
+  "如果需要我可以",
+];
+
+function hasNoTailFillerConstraintForRiskLevel(riskLevel) {
+  return evals.some(
+    (entry) =>
+      entry.risk_level === riskLevel &&
+      Array.isArray(entry.scenario_tags) &&
+      entry.scenario_tags.includes("no-tail-filler") &&
+      Array.isArray(entry.must_not) &&
+      entry.must_not.filter((token) => tailFillerMustNotTokens.includes(token)).length >= 2
+  );
+}
+
 for (const [risk, count] of Object.entries(riskCounts)) {
   if (count === 0) {
     fail(`expected at least one ${risk} eval`);
@@ -203,6 +224,14 @@ if (!hasHighNoImplicitConsentConstraint) {
 
 if (!hasActivationBoundaryConstraint) {
   fail("expected at least one activation-boundary eval that forbids automatic AGENTS.md edits");
+}
+
+if (!hasNoTailFillerConstraintForRiskLevel("LOW")) {
+  fail("expected at least one LOW eval tagged no-tail-filler with multiple anti-tail-filler must_not constraints");
+}
+
+if (!hasNoTailFillerConstraintForRiskLevel("MEDIUM")) {
+  fail("expected at least one MEDIUM eval tagged no-tail-filler with multiple anti-tail-filler must_not constraints");
 }
 
 for (const tag of requiredScenarioTags) {

@@ -27,12 +27,30 @@ After `watchdog-shrimp` is actually integrated into OpenClaw, an agent is much m
 
 1. Execute low-risk work directly instead of asking again.
 2. Execute medium-risk work directly, then verify and report.
-3. Hard-stop on destructive, privileged, costly, external, or OpenClaw-core actions.
-4. Escalate OpenClaw-specific surfaces more aggressively than generic developer tasks.
-5. Stay honest about the boundary between skill-layer guidance and runtime enforcement.
+3. Aim for a continuous LOW/MEDIUM closed loop: end with verify + report only, without unnecessary tail offers like `Next Step` or `If you need, I can...`.
+4. Hard-stop on destructive, privileged, costly, external, or OpenClaw-core actions.
+5. Escalate OpenClaw-specific surfaces more aggressively than generic developer tasks.
+6. Stay honest about the boundary between skill-layer guidance and runtime enforcement.
+
+That no-tail-filler rule is an execution-result preference, not a ban on explicit structured fields in activation or audit templates.
 
 Installation alone does not create that effect.
 This repository needs real OpenClaw injection to become active governance.
+
+## Promise To Contract Map
+
+- `LOW` / `MEDIUM` should move directly:
+  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md), [`checklist.md`](./watchdog-shrimp/references/checklist.md)
+- `HIGH` should hard-stop for explicit approval:
+  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md), [`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md)
+- no-tail-filler is a governance goal for `LOW` / `MEDIUM` execution-result replies:
+  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md), [`checklist.md`](./watchdog-shrimp/references/checklist.md)
+- human acceptance prompts should reflect the same LOW/MEDIUM no-tail intent:
+  see [`openclaw-prompts.md`](./watchdog-shrimp/evals/openclaw-prompts.md), [`evals.json`](./watchdog-shrimp/evals/evals.json)
+- install is not activation:
+  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md)
+- plugin failure should route to recovery:
+  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`examples.md`](./watchdog-shrimp/references/examples.md), [`evals.json`](./watchdog-shrimp/evals/evals.json)
 
 ## Core Behavior
 
@@ -84,6 +102,7 @@ To affect actual OpenClaw execution, it must be injected through a real entry po
 
 - risk classification into `LOW`, `MEDIUM`, and `HIGH`
 - low- and medium-risk execution without unnecessary permission friction
+- continuous LOW/MEDIUM execution with tail-offer suppression as a governance goal
 - OpenClaw-specific escalation rules
 - preference-aware reduction of result verbosity for repeated `MEDIUM` patterns
 - routing risky work toward clarification, protection, installer, or recovery workflows
@@ -258,6 +277,20 @@ Run strict gate checks for CI or release automation:
 npm run validate:ci
 ```
 
+Use `npm run validate` for local contract checks when your machine does not have a real OpenClaw target path yet.
+Use `npm run validate:ci` only in CI or environment images where the OpenClaw target paths are intentionally pre-provisioned.
+
+Common strict-mode failure meanings:
+- `activation-check: NOT ACTIVE`: the target `AGENTS.md` path does not exist yet, or the exact snippet has not been injected
+- `workspace-sync: DRIFT`: the canonical workspace skill path is missing, stale, or differs from the repository copy
+
+Minimal strict-gate runbook:
+1. Create the real always-injected target file for your environment, such as `~/.openclaw/workspace/AGENTS.md`.
+2. Paste the exact snippet from [`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md) into that target.
+3. Ensure the canonical active skill path exists at `~/.openclaw/workspace/skills/watchdog-shrimp`.
+4. Sync that active skill copy with this repository before running `npm run validate:ci`.
+If your environment uses different paths, pass them explicitly to `check-activation.js` or `check-workspace-sync.js` instead of assuming the defaults.
+
 This repository currently ships seed eval cases for:
 
 - read-only inspection that should remain `LOW`
@@ -275,6 +308,11 @@ This is still not a live model-scoring harness.
 
 The eval set is still seed data, not a full executable runner.
 That is an honest current limitation, not a hidden one.
+
+## Promise Boundary
+
+`no-tail-filler` is a governance preference for execution-result replies, not a runtime-wide ban on structured fields.
+Activation and audit templates may still contain explicit fields such as `Next Step` when the format requires them.
 
 ## ClawHub Upload
 
@@ -341,3 +379,6 @@ That is the right open-source posture:
 - structured enough to inform future runtime policy design
 
 If the goal becomes "high-risk actions never slip through", the next phase is runtime work.
+
+This skill is already strong enough for public use.
+Further returns now come more from runtime hooks and semantic harnesses than from continuing to expand text rules.

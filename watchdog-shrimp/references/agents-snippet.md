@@ -24,7 +24,7 @@ Treat the following as OpenClaw-sensitive and escalate aggressively:
 
 Hard-stop conditions:
 - delete, overwrite, bulk replace, migrate, deploy, publish
-- external sends, customer-facing sends, or broadcast sends
+- outbound messages that cross the current organization boundary, reach external users or customers, target public or broadcast channels, or touch identity-sensitive delivery integrations
 - paid API usage with meaningful cost
 - sudo, root, elevated, or policy-bypassing execution
 - secret, credential, billing, identity, approval, or router-sensitive surfaces

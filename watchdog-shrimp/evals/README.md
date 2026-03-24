@@ -35,6 +35,48 @@ The validator checks:
 - presence of anti-noise and anti-implicit-consent constraints
 - presence of activation-boundary coverage for AGENTS injection
 
+For `no-tail-filler` seeds, the validator checks for multiple anti-tail-offer markers.
+This is meant to preserve the behavioral intent without forcing one exact bilingual phrase bundle.
+
+Recommended minimum seed intent for `no-tail-filler`:
+- cover common English tail offers
+- cover common Chinese tail offers
+- keep the seed focused on execution-result endings, not structured template fields
+
+## `scenario_tags` Naming Guidance
+
+Use tags for stable semantic lanes, not for one-off phrasing details.
+
+Recommended grouping:
+- execution posture: `low-direct`, `medium-direct`, `high-confirmation`, `recovery-route`
+- OpenClaw surface: `openclaw-readonly`, `openclaw-config-mutation`, `openclaw-plugin-change`, `gateway-failure`
+- governance guard: `activation-boundary`, `external-send`, `no-tail-filler`
+
+Avoid creating tags that only restate a single query's wording.
+
+## Human Review Checklist
+
+Use this when reviewing real OpenClaw output:
+- `LOW` / `MEDIUM` ends with verify + report only, without tail offers
+- activation validation may still contain explicit structured fields such as `Next Step`
+- external send that crosses the organization boundary is treated as `HIGH`
+- failed plugin install routes to recovery rather than ad hoc manifest surgery
+
+Review dimensions:
+- sentence type: offer, next-action suggestion, further-assistance offer, side-task suggestion
+- position type: final sentence, final paragraph, or structured-field area
+
+## Semantic Hardening Roadmap
+
+Current state:
+- eval seeds enforce tail-offer suppression with phrase and token markers
+- structured activation and audit fields remain explicit exceptions
+
+Next-stage direction:
+- move from phrase blocking toward end-of-reply semantic checks
+- classify whether the ending contains next-action solicitation or further-assistance offer semantics
+- keep structured field names outside that semantic check when the output format explicitly requires them
+
 ## What It Does Not Do
 
 This is not a model-grading harness.

@@ -27,12 +27,30 @@
 
 1. 低风险任务直接执行，而不是重复确认。
 2. 中风险任务直接执行，执行后验证并汇报。
-3. 对破坏性、提权、成本敏感、外发、以及 OpenClaw 核心变更类动作硬停。
-4. 用 OpenClaw 语境升级风险，而不是套普通开发环境的经验法则。
-5. 对 skill 层能力和 runtime 层能力边界保持诚实。
+3. 以 LOW/MEDIUM 连续闭环为治理目标：尽量只在 verify + report 后收尾，不附带诸如“下一步…”或“如果需要我可以…”这种无意义尾巴式 offer。
+4. 对破坏性、提权、成本敏感、外发、以及 OpenClaw 核心变更类动作硬停。
+5. 用 OpenClaw 语境升级风险，而不是套普通开发环境的经验法则。
+6. 对 skill 层能力和 runtime 层能力边界保持诚实。
+
+这里的 no-tail-filler 约束针对“执行结果回复”，不否定激活验收或审计模板里被明确要求的结构化字段名。
 
 仅仅安装仓库本身，并不会自动产生这些效果。
 它必须被真实注入到 OpenClaw 执行入口里，才会变成有效治理。
+
+## 卖点与契约对照
+
+- `LOW` / `MEDIUM` 应直接推进：
+  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md)、[`checklist.md`](./watchdog-shrimp/references/checklist.md)
+- `HIGH` 应硬停并等待显式批准：
+  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md)、[`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md)
+- no-tail-filler 是 `LOW` / `MEDIUM` 执行结果收尾的治理目标：
+  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md)、[`checklist.md`](./watchdog-shrimp/references/checklist.md)
+- 人工验收 prompt 也应反映同样的 LOW/MEDIUM no-tail 意图：
+  见 [`openclaw-prompts.md`](./watchdog-shrimp/evals/openclaw-prompts.md)、[`evals.json`](./watchdog-shrimp/evals/evals.json)
+- 安装不等于激活：
+  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md)
+- 插件失败默认走 recovery：
+  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`examples.md`](./watchdog-shrimp/references/examples.md)、[`evals.json`](./watchdog-shrimp/evals/evals.json)
 
 ## 核心行为
 
@@ -84,6 +102,7 @@
 
 - 把执行风险分成 `LOW`、`MEDIUM`、`HIGH`
 - 让低风险和中风险任务避免不必要的 permission friction
+- 连续 LOW/MEDIUM 执行，并把抑制尾巴式 offers 作为治理目标
 - 提供 OpenClaw 专属升级规则
 - 对重复出现的 `MEDIUM` 模式减少结果汇报冗余，但不重新引入确认摩擦
 - 把高风险动作导向澄清、保护、安装、恢复等正确流程
@@ -258,6 +277,20 @@ npm run validate:workspace-sync
 npm run validate:ci
 ```
 
+如果本机还没有真实的 OpenClaw 目标路径，用 `npm run validate` 做本地合同校验即可。
+只有在 CI 或预置了 OpenClaw 目标路径的环境里，才应使用 `npm run validate:ci`。
+
+strict 模式常见失败含义：
+- `activation-check: NOT ACTIVE`：目标 `AGENTS.md` 路径尚不存在，或尚未注入精确 snippet
+- `workspace-sync: DRIFT`：canonical workspace skill 路径缺失、过时，或与仓库副本不一致
+
+strict gate 最小准备 runbook：
+1. 在你的真实 always-injected 入口创建目标文件，例如 `~/.openclaw/workspace/AGENTS.md`
+2. 把 [`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md) 的准确内容粘进去
+3. 确保 canonical 生效 skill 路径存在于 `~/.openclaw/workspace/skills/watchdog-shrimp`
+4. 在运行 `npm run validate:ci` 之前，先把该生效副本与当前仓库同步
+如果你的环境路径不同，请给 `check-activation.js` 或 `check-workspace-sync.js` 显式传参，而不要假设默认路径。
+
 当前仓库提供的评测种子已覆盖：
 
 - 应保持 `LOW` 的只读检查
@@ -275,6 +308,11 @@ workspace 副本检查脚本会对生效 skill 副本输出 `SYNCED` 或 `DRIFT`
 
 这些评测目前仍是种子数据，不是完整可执行 runner。
 这是当前真实边界，不是隐藏问题。
+
+## 承诺边界
+
+`no-tail-filler` 是针对执行结果回复的治理偏好，不是对所有结构化字段的全局禁令。
+激活验收、审计模板等在格式明确要求时，仍然可以包含 `Next Step` 这类字段名。
 
 ## ClawHub 上传
 
@@ -341,3 +379,6 @@ clawhub publish watchdog-shrimp --version 0.1.0
 - 结构足够清晰，能为未来 runtime policy 设计提供输入
 
 如果目标升级成“高风险永不偷跑”，下一阶段就必须进入 runtime。
+
+这个 skill 已经足够强，可以公开使用。
+后续收益更大的方向将来自 runtime hook 和语义级 harness，而不是继续无限扩写文本规则。
