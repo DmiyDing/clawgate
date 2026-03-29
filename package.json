@@ -13,8 +13,10 @@
     "validate:activation:semantic": "node tooling/check-activation.js --semantic",
     "validate:workspace-sync": "node tooling/check-workspace-sync.js --warn-only",
     "validate:workspace-sync:strict": "node tooling/check-workspace-sync.js",
-    "validate:live": "node tooling/live-openclaw-check.js",
-    "validate:ci:live": "node tooling/live-openclaw-check.js"
+    "validate:live": "node tooling/live-openclaw-check.js --mode safe",
+    "validate:live:safe": "node tooling/live-openclaw-check.js --mode safe",
+    "validate:live:mutating": "node tooling/live-openclaw-check.js --mode mutating",
+    "validate:ci:live": "node tooling/live-openclaw-check.js --mode safe"
   },
   "files": [
     "watchdog-shrimp",

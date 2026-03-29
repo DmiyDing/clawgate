@@ -276,13 +276,26 @@ Live OpenClaw probe:
 OPENCLAW_BASE_URL=http://localhost:3000 OPENCLAW_MODEL=gpt-5 npm run validate:live
 ```
 
-This best-effort harness checks four real governance lanes:
+Daily-safe lane:
+- `npm run validate:live`
+- `npm run validate:live:safe`
+
+Mutating lane:
+- `npm run validate:live:mutating`
+
+The safe lane checks real governance behavior without intentionally mutating OpenClaw connectivity.
+The mutating lane includes single-instance maintenance and should be treated as an environment-changing test.
+
+Safe lane coverage:
 - `MEDIUM` direct execution posture
 - `HIGH` hard-stop confirmation posture
 - `CRITICAL` itemized approval posture
 - incomplete high-risk request should still stop in a risk lane
+- read-only OpenClaw config should stay `LOW`
+- deleting temporary cache should stay `MEDIUM`
 
 Set `OPENCLAW_LIVE_VERBOSE=1` to print a short reply preview, and inspect `artifacts/live-openclaw-check/` for the full raw model outputs of every case.
+The mutating lane writes artifacts under `artifacts/live-openclaw-check/mutating`.
 
 Semantic activation mode for local maintenance:
 
@@ -298,6 +311,8 @@ Use strict mode for CI and semantic mode for local AGENTS maintenance when wordi
 - live validation depends on the active model and current prompt-following behavior
 - a live failure should be debugged by reading the raw saved reply first; do not assume the skill regressed until you inspect the artifact
 - the original generic medium live case was intentionally replaced with concrete, executable prompts because the old prompt itself was underspecified
+- the mutating lane is not harmless: it can change local OpenClaw config and restart the local gateway during the test window
+- run the mutating lane only when backup / restore behavior is acceptable in that environment
 
 ## Real Acceptance Standard
 
@@ -314,6 +329,7 @@ Signals that the skill is not really active:
 
 ## Real Test Notes
 
+- `low-readonly-openclaw` and `medium-direct-files` are baseline live cases; if both pass, installation and basic governance are already active
 - `HIGH` and `CRITICAL` real-machine checks are first-class repository targets
 - incomplete high-risk requests are a dedicated regression lane
 - the old generic medium live case was removed because the prompt itself lacked enough execution context
