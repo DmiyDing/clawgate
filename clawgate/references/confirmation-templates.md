@@ -68,6 +68,7 @@ Rules:
 - Do not use ordinary clarification instead of this template for plugin install + config mutation + restart.
 - If any information is missing, keep the missing-fields prompt inside the blocked confirmation block.
 - Do not degrade into ordinary Q&A or clarification-first style questioning.
+- Do not output a default execution plan, ordered implementation steps, or fallback actions before explicit confirmation.
 - State authorization granularity explicitly: this approval covers this exact high-risk action only.
 - State `Continue or Cancel` explicitly.
 
@@ -157,6 +158,11 @@ Possible Consequence: guessing any missing field can break plugin wiring or leav
 itemized_actions: []
 ```
 
+Rules:
+- Keep `Missing Fields` and `Blocked Until` inside the same blocked confirmation block.
+- Do not ask a free-form follow-up question outside this template.
+- Do not propose a default install plan before explicit confirmation.
+
 ## CRITICAL
 
 Use a blocked itemized confirmation with this fixed field order:
@@ -172,6 +178,7 @@ Rules:
 - Never merge approvals for multiple critical items.
 - Use `Approve Each Item` and require a separate approval or cancellation for every numbered item.
 - For broadcast or public-channel work, list each audience or destination separately.
+- Do not output a bundled execution plan before itemized approval is granted.
 - Include an explicit refusal block:
   - `I will not execute this on a general confirmation`
   - `Merged approval is not accepted`
@@ -244,6 +251,11 @@ itemized_actions:
 - send to customer mailing list `A`
 - send to public channel `B`
 ```
+
+Rules:
+- Approvals must be destination-by-destination, not audience-wide.
+- `Approve all external destinations` or similar bundled approval is not accepted.
+- Do not replace `Approve Each Destination` with a general warning paragraph.
 
 ## OpenClaw-Specific Notes
 

@@ -15,8 +15,10 @@ Installation alone does not activate `clawgate`.
 - `HIGH`: stop before execution, state `Risk: HIGH`, and require one blocked confirmation that includes `Action`, `Scope`, `Impact`, `Possible Consequence`, `Continue or Cancel`, `Missing Fields` when relevant, and `Blocked Until`.
 - for plugin install + config mutation + restart, do not use ordinary clarification; always enter the blocked `HIGH` template.
 - do not present a default execution plan before explicit `HIGH` confirmation.
+- the first visible `HIGH` output must be the blocked confirmation block itself, not a warning paragraph followed by a plan.
 - `CRITICAL`: stop before execution, state `Risk: CRITICAL`, enumerate `Critical Action Items`, state `Authorization Granularity`, require `Approve Each Item`, state `Continue or Cancel`, and state `Blocked Until`.
 - external broadcast or public-channel delivery must use destination-level approval; do not accept one approval for all destinations.
+- the first visible `CRITICAL` output must be the blocked itemized approval block itself, not a general explanation.
 - If a request clearly hits `HIGH` or `CRITICAL`, reply must surface the risk level and blocked confirmation fields before ordinary clarification.
 - Composite delete + router / outbound / shared-state changes must not ask for ordinary confirmation only; they require itemized authorization.
 
@@ -71,8 +73,10 @@ Activation rule:
 - `MEDIUM`：直接执行，按 `Action` -> `Verify` -> `Result` 报告。
 - `HIGH`：执行前暂停，必须先输出 `Risk: HIGH`，并在同一个阻断确认块里要求 `Action`、范围、影响、可能后果、继续或取消、缺失字段以及 `Blocked Until`。
 - 在得到明确 `HIGH` 确认前，不得先给默认执行计划。
+- `HIGH` 的第一可见输出必须就是阻断确认块本身，不能先给说明文再给计划。
 - `CRITICAL`：执行前暂停，必须先输出 `Risk: CRITICAL`，列出 `Critical Action Items`，说明 `Authorization Granularity`，要求 `Approve Each Item`，并输出 `Continue or Cancel` 与 `Blocked Until`，不接受合并授权。
 - 外部广播或公开渠道投递必须逐目的地授权，不能接受一次性总授权。
+- `CRITICAL` 的第一可见输出必须就是逐项授权块本身，不能先给泛化风险说明。
 - 如果请求已经明显命中 `HIGH` 或 `CRITICAL`，回复必须先给出风险等级和阻断字段，不能先退回普通澄清。
 - 复合删除 + 路由 / 外发 / 共享状态变更，不得仅要求普通确认，必须逐项授权。
 

@@ -52,7 +52,7 @@ function readFile(filePath) {
 // Check 1: SKILL.md Core Policy line should have all HIGH fields
 function checkSkillCorePolicy(content) {
   // Look for the HIGH line in Core Policy section
-  const highLineMatch = content.match(/`HIGH`: require explicit second confirmation on ([^\n]+)/);
+  const highLineMatch = content.match(/`HIGH`: ([^\n]+)/);
   if (!highLineMatch) {
     fail("SKILL.md: Cannot find HIGH line in Core Policy section");
     return false;
@@ -61,7 +61,7 @@ function checkSkillCorePolicy(content) {
   const fieldsStr = highLineMatch[1].toLowerCase();
   const missing = [];
 
-  for (const field of EXPECTED_HIGH_FIELDS) {
+  for (const field of EXPECTED_HIGH_TEMPLATE_FIELDS) {
     if (!fieldsStr.includes(field)) {
       missing.push(field);
     }
@@ -72,9 +72,9 @@ function checkSkillCorePolicy(content) {
     return false;
   }
 
-  // Check for "go/no-go" which should be "continue/cancel"
-  if (fieldsStr.includes("go/no-go") || fieldsStr.includes("go or no-go")) {
-    fail('SKILL.md Core Policy uses "go/no-go" instead of "continue/cancel"');
+  const missingCorePolicyStructure = ["blocked", "risk: high"].filter((token) => !fieldsStr.includes(token));
+  if (missingCorePolicyStructure.length > 0) {
+    fail(`SKILL.md Core Policy HIGH line missing tokens: ${missingCorePolicyStructure.join(", ")}`);
     return false;
   }
 
@@ -115,6 +115,12 @@ function checkSkillExecutionStrategy(content) {
     return false;
   }
 
+  const missingHighStructure = ["action", "blocked until"].filter((token) => !listContent.toLowerCase().includes(token));
+  if (missingHighStructure.length > 0) {
+    fail(`SKILL.md Execution Strategy HIGH section missing tokens: ${missingHighStructure.join(", ")}`);
+    return false;
+  }
+
   pass("SKILL.md Execution Strategy HIGH fields OK");
   return true;
 }
@@ -142,7 +148,9 @@ function checkAgentsSnippet(content) {
     return false;
   }
 
-  const missingHighStructure = ["blocked until"].filter((token) => !snippetLower.includes(token));
+  const missingHighStructure = ["blocked until", "first visible", "default execution plan"].filter(
+    (token) => !snippetLower.includes(token)
+  );
   if (missingHighStructure.length > 0) {
     fail(`agents-snippet.md HIGH protocol missing tokens: ${missingHighStructure.join(", ")}`);
     return false;
@@ -326,7 +334,14 @@ function checkCriticalCoverage(content, agentsContent, templatesContent, riskMat
     ok = false;
   } else {
     const template = criticalTemplateMatch[1];
-    const requiredFields = ["risk: critical", "critical action items", "authorization granularity", "approve each item", "continue or cancel"];
+    const requiredFields = [
+      "risk: critical",
+      "critical action items",
+      "authorization granularity",
+      "approve each item",
+      "continue or cancel",
+      "blocked until",
+    ];
     const missing = requiredFields.filter((field) => !template.toLowerCase().includes(field));
     if (missing.length > 0) {
       fail(`confirmation-templates.md Critical Example missing fields: ${missing.join(", ")}`);

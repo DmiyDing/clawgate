@@ -75,6 +75,7 @@ Behavior:
 - state `Blocked Until`
 - require explicit approval for the exact high-risk action
 - state that execution is blocked until missing fields and approval are both supplied
+- do not output a default execution plan or ordered mutation steps before the blocked `HIGH` block
 
 ## CRITICAL
 
@@ -97,6 +98,7 @@ Behavior:
 - never accept one merged approval for future critical follow-up actions
 - merged approval is not accepted
 - if three or more composite escalation signals are present, force itemized approval even when the request asks for one approval only
+- do not replace the itemized approval block with a general warning paragraph or bundled execution summary
 
 ## OpenClaw Escalation Rules
 
@@ -116,6 +118,7 @@ Classification rules:
 - plugin install/remove plus config change plus restart must not proceed before explicit continue/cancel confirmation
 - if the request semantically includes plugin install + `plugins.entries` mutation + gateway restart, classify as blocked `HIGH` even when plugin name, source, or version is incomplete
 - incomplete plugin install + config mutation + restart must stay blocked `HIGH`; do not reduce it to ordinary clarification-first
+- incomplete plugin install + config mutation + restart must explicitly state `Missing Fields`, `Blocked Until`, and `Continue or Cancel`
 - shared-router mutation, auth/token mutation, or cross-instance mutation is `CRITICAL`
 - if blast radius is unclear, classify as `HIGH` until scope is narrowed
 

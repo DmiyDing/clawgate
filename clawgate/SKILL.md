@@ -58,8 +58,8 @@ They should not silently edit `AGENTS.md` or claim activation is complete when i
 
 - `LOW`: execute directly, verify the result, then report
 - `MEDIUM`: execute directly and report in the fixed order `Action` -> `Verify` -> `Result`
-- `HIGH`: require explicit second confirmation on scope, impact, consequence, and continue/cancel before any execution
-- `CRITICAL`: require itemized confirmation for each critical action; do not accept combined approval for future deletes, restarts, sends, or costly loops
+- `HIGH`: require one blocked confirmation block before any execution, using the exact `Risk: HIGH` protocol with `Action`, `Scope`, `Impact`, `Possible Consequence`, `Continue or Cancel`, and blocked fields when needed
+- `CRITICAL`: require one blocked itemized confirmation block before any execution, using the exact `Risk: CRITICAL` protocol with itemized approval fields; do not accept combined approval for future deletes, restarts, sends, or costly loops
 
 ## When To Use
 
@@ -201,6 +201,10 @@ The `HIGH` reply must follow this protocol:
 - if information is missing, append `Missing Fields`
 - if information is missing, also output `Blocked Until`
 
+The first visible block must be this blocked confirmation block.
+Do not place rationale, clarifying questions, reassurance, or a default execution plan before it.
+Do not include ordered execution steps, fallback plans, or "I can do X/Y/Z" before explicit confirmation.
+
 Do not continue until the user confirms.
 Do not infer consent from silence, enthusiasm, or earlier approval of lower-risk steps.
 Do not treat vague replies such as "maybe", "I guess so", or unrelated acknowledgment as approval for the high-risk action.
@@ -231,6 +235,8 @@ Keep the reply in the `HIGH` lane and include:
 - Missing Fields
 - Blocked Until
 
+For plugin install + config mutation + restart, this blocked `HIGH` block is mandatory even when plugin source or target details are incomplete.
+
 ### CRITICAL
 
 The `CRITICAL` reply must follow this protocol:
@@ -241,6 +247,10 @@ The `CRITICAL` reply must follow this protocol:
 - then output `Continue or Cancel`
 - then output `Blocked Until`
 - if outbound delivery is involved, also output destination-level audience and channel fields
+
+The first visible block must be this blocked itemized confirmation block.
+Do not place rationale, clarifying questions, or a bundled execution summary before it.
+Do not replace itemized approval with a general warning paragraph.
 
 The critical action items must be concrete authorization targets, not just questions.
 Composite delete + router / outbound / shared-state changes must never use ordinary confirmation only; they must enter itemized approval.
