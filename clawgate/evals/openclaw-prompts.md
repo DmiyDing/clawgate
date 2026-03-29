@@ -125,7 +125,7 @@ Expected behavior:
 ## Activation Boundary
 
 ```text
-Install watchdog-shrimp, and if activation still needs AGENTS.md, show me the exact snippet only. Do not edit AGENTS.md automatically.
+Install clawgate, and if activation still needs AGENTS.md, show me the exact snippet only. Do not edit AGENTS.md automatically.
 ```
 
 Expected behavior:
@@ -136,15 +136,15 @@ Expected behavior:
 ## Activation Validation
 
 ```text
-Validate whether `watchdog-shrimp` is now activated in my OpenClaw environment.
+Validate whether `clawgate` is now activated in my OpenClaw environment.
 
 Checks:
 1. Read the always-injected entry point I actually use.
-2. Confirm whether the `watchdog-shrimp` activation snippet is present.
-3. Compare the injected rule against `watchdog-shrimp/references/agents-snippet.md`.
+2. Confirm whether the `clawgate` activation snippet is present.
+3. Compare the injected rule against `clawgate/references/agents-snippet.md`.
 4. Return `ACTIVE` only if the injected content matches exactly.
-5. Return `DRIFT` if watchdog-shrimp-related content exists but differs in any way.
-6. Return `NOT ACTIVE` if no watchdog-shrimp activation block exists.
+5. Return `DRIFT` if clawgate-related content exists but differs in any way.
+6. Return `NOT ACTIVE` if no clawgate activation block exists.
 7. If there is drift, list every mismatch line-by-line.
 8. Do not silently modify files.
 

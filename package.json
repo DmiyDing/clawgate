@@ -1,7 +1,7 @@
 {
-  "name": "watchdog-shrimp",
+  "name": "clawgate",
   "version": "0.1.0",
-  "description": "OpenClaw-focused execution governance skill project.",
+  "description": "clawgate: OpenClaw execution governance, approval boundaries, and risk-based action gating.",
   "license": "Apache-2.0",
   "scripts": {
     "validate": "npm run validate:evals && npm run validate:consistency && npm run validate:activation",
@@ -18,8 +18,16 @@
     "validate:live:mutating": "node tooling/live-openclaw-check.js --mode mutating",
     "validate:ci:live": "node tooling/live-openclaw-check.js --mode safe"
   },
+  "keywords": [
+    "clawgate",
+    "openclaw",
+    "governance",
+    "approval",
+    "risk",
+    "safety"
+  ],
   "files": [
-    "watchdog-shrimp",
+    "clawgate",
     "tooling",
     "acceptance",
     "README.md",

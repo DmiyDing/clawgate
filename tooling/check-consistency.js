@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Cross-file consistency checker for watchdog-shrimp
+ * Cross-file consistency checker for clawgate
  * Verifies HIGH / CRITICAL confirmation fields match across:
  * - SKILL.md (Core Policy + Execution Strategy)
  * - agents-snippet.md (English activation snippet)
@@ -19,10 +19,10 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 
 const files = {
-  skill: path.join(root, "watchdog-shrimp", "SKILL.md"),
-  agentsSnippet: path.join(root, "watchdog-shrimp", "references", "agents-snippet.md"),
-  confirmationTemplates: path.join(root, "watchdog-shrimp", "references", "confirmation-templates.md"),
-  riskMatrix: path.join(root, "watchdog-shrimp", "references", "risk-matrix.md"),
+  skill: path.join(root, "clawgate", "SKILL.md"),
+  agentsSnippet: path.join(root, "clawgate", "references", "agents-snippet.md"),
+  confirmationTemplates: path.join(root, "clawgate", "references", "confirmation-templates.md"),
+  riskMatrix: path.join(root, "clawgate", "references", "risk-matrix.md"),
 };
 
 // Expected HIGH confirmation fields (canonical)

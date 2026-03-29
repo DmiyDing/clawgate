@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const root = path.resolve(__dirname, "..");
-const evalPath = path.join(root, "watchdog-shrimp", "evals", "evals.json");
+const evalPath = path.join(root, "clawgate", "evals", "evals.json");
 
 const requiredScenarioTags = [
   "openclaw-readonly",

@@ -78,4 +78,4 @@ Expected behavior:
 ## Boundary With clarify-first
 
 Use `clarify-first` first when the issue is missing intent or unresolved assumptions.
-Use `watchdog-shrimp` when the main issue is execution autonomy and risk handling.
+Use `clawgate` when the main issue is execution autonomy and risk handling.

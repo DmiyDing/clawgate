@@ -1,4 +1,4 @@
-# watchdog-shrimp：OpenClaw 执行治理
+# clawgate：OpenClaw 执行治理
 
 面向 OpenClaw 的执行治理 skill，用来解决 Agent 不是太啰嗦、就是太冒进的问题。
 
@@ -13,7 +13,7 @@
 1. 安全的事情也反复确认，效率很差。
 2. 有风险的事情一旦拿到工具，又推进得太随意。
 
-`watchdog-shrimp` 就是为了解决 OpenClaw 里的这个执行姿态问题。
+`clawgate` 就是为了解决 OpenClaw 里的这个执行姿态问题。
 它不想解决所有 Agent 问题。
 它只聚焦一个核心判断：
 
@@ -23,7 +23,7 @@
 
 ## 你会得到什么
 
-当 `watchdog-shrimp` 被真实接入 OpenClaw 后，Agent 更有可能做到：
+当 `clawgate` 被真实接入 OpenClaw 后，Agent 更有可能做到：
 
 1. 低风险任务直接执行，而不是重复确认。
 2. 中风险任务直接执行，执行后验证并汇报。
@@ -40,17 +40,17 @@
 ## 卖点与契约对照
 
 - `LOW` / `MEDIUM` 应直接推进：
-  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md)、[`checklist.md`](./watchdog-shrimp/references/checklist.md)
+  见 [`SKILL.md`](./clawgate/SKILL.md)、[`risk-matrix.md`](./clawgate/references/risk-matrix.md)、[`checklist.md`](./clawgate/references/checklist.md)
 - `HIGH` 应硬停并等待显式批准，`CRITICAL` 应逐项授权：
-  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md)、[`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md)、[`confirmation-templates.md`](./watchdog-shrimp/references/confirmation-templates.md)
+  见 [`SKILL.md`](./clawgate/SKILL.md)、[`agents-snippet.md`](./clawgate/references/agents-snippet.md)、[`risk-matrix.md`](./clawgate/references/risk-matrix.md)、[`confirmation-templates.md`](./clawgate/references/confirmation-templates.md)
 - no-tail-filler 是 `LOW` / `MEDIUM` 执行结果收尾的治理目标：
-  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md)、[`checklist.md`](./watchdog-shrimp/references/checklist.md)
+  见 [`SKILL.md`](./clawgate/SKILL.md)、[`risk-matrix.md`](./clawgate/references/risk-matrix.md)、[`checklist.md`](./clawgate/references/checklist.md)
 - 人工验收 prompt 也应反映同样的 LOW/MEDIUM no-tail 意图：
-  见 [`openclaw-prompts.md`](./watchdog-shrimp/evals/openclaw-prompts.md)、[`evals.json`](./watchdog-shrimp/evals/evals.json)
+  见 [`openclaw-prompts.md`](./clawgate/evals/openclaw-prompts.md)、[`evals.json`](./clawgate/evals/evals.json)
 - 安装不等于激活：
-  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md)
+  见 [`SKILL.md`](./clawgate/SKILL.md)、[`agents-snippet.md`](./clawgate/references/agents-snippet.md)
 - 插件失败默认走 recovery：
-  见 [`SKILL.md`](./watchdog-shrimp/SKILL.md)、[`examples.md`](./watchdog-shrimp/references/examples.md)、[`evals.json`](./watchdog-shrimp/evals/evals.json)
+  见 [`SKILL.md`](./clawgate/SKILL.md)、[`examples.md`](./clawgate/references/examples.md)、[`evals.json`](./clawgate/evals/evals.json)
 
 ## 核心行为
 
@@ -80,12 +80,12 @@
 
 ## 没有它 vs 有了它
 
-**没有 `watchdog-shrimp`**
+**没有 `clawgate`**
 - “安装这个插件并接到 OpenClaw 里。”
 - Agent 容易把它当成普通开发环境接线，推进过快。
 - 结果：共享配置、gateway 或 delivery 行为可能被直接打坏。
 
-**有了 `watchdog-shrimp`**
+**有了 `clawgate`**
 - 当这个 skill 被真正接入 OpenClaw 入口后，同样的请求才会被识别成 OpenClaw 敏感动作。
 - Agent 会先说明影响、等待显式确认，并在需要时导向 guarded installer / recovery 这类保护通道。
 - 结果：该顺滑的地方顺滑，该拦住的地方真正拦住。
@@ -123,16 +123,16 @@
 
 ## 仓库结构
 
-- `watchdog-shrimp/SKILL.md`：主 skill 契约
-- `watchdog-shrimp/references/risk-matrix.md`：面向 OpenClaw 的风险规则
-- `watchdog-shrimp/references/confirmation-templates.md`：高风险确认模板
-- `watchdog-shrimp/references/examples.md`：示例与边界
-- `watchdog-shrimp/references/checklist.md`：执行检查清单
-- `watchdog-shrimp/references/single-instance-profile.md`：单实例降级策略
-- `watchdog-shrimp/evals/evals.json`：评测种子样例
-- `watchdog-shrimp/evals/README.md`：本地评测说明
-- `watchdog-shrimp/evals/openclaw-prompts.md`：真实 OpenClaw 验收提示词
-- `watchdog-shrimp/references/agents-snippet.md`：单一来源的 AGENTS 激活片段
+- `clawgate/SKILL.md`：主 skill 契约
+- `clawgate/references/risk-matrix.md`：面向 OpenClaw 的风险规则
+- `clawgate/references/confirmation-templates.md`：高风险确认模板
+- `clawgate/references/examples.md`：示例与边界
+- `clawgate/references/checklist.md`：执行检查清单
+- `clawgate/references/single-instance-profile.md`：单实例降级策略
+- `clawgate/evals/evals.json`：评测种子样例
+- `clawgate/evals/README.md`：本地评测说明
+- `clawgate/evals/openclaw-prompts.md`：真实 OpenClaw 验收提示词
+- `clawgate/references/agents-snippet.md`：单一来源的 AGENTS 激活片段
 - `tooling/validate-evals.js`：本地 eval 结构校验脚本
 - `tooling/check-activation.js`：AGENTS 激活漂移检查脚本
 - `tooling/check-workspace-sync.js`：workspace 生效副本漂移检查脚本
@@ -156,8 +156,11 @@ git clone git@github.com:DmiyDing/watchdog-shrimp.git
 ```
 
 然后把这个仓库放到 OpenClaw 兼容的 skills 路径里，或者通过你的本地 skill 工作流注册它。
-建议只保留一个 canonical 生效副本：`~/.openclaw/workspace/skills/watchdog-shrimp`。
-避免同时留一个陈旧的 `~/.openclaw/skills/watchdog-shrimp` 副本。
+建议只保留一个 canonical 生效副本：`~/.openclaw/workspace/skills/clawgate`。
+避免同时留一个陈旧的 `~/.openclaw/skills/clawgate` 副本。
+
+当前产品名是 `clawgate`。
+当前 GitHub 仓库路径仍是 `DmiyDing/watchdog-shrimp`，直到仓库本身真正改名。
 
 如有需要，安装后重启客户端。
 如果自动加载不稳定，就显式按名称调用这个 skill。
@@ -167,15 +170,15 @@ git clone git@github.com:DmiyDing/watchdog-shrimp.git
 如果你的 OpenClaw 实例可以访问 GitHub，并且有权限管理本地 skills，可以把下面这段提示词直接发给你自己的 OpenClaw：
 
 ```text
-请从 `DmiyDing/watchdog-shrimp` 安装 `watchdog-shrimp` skill。
+请从 `DmiyDing/watchdog-shrimp` 安装 `clawgate` skill。
 
 目标：
 1. 把这个 skill 安装或克隆到当前 OpenClaw 使用的本地 skills 路径中。
-2. 验证仓库里存在 `watchdog-shrimp/SKILL.md`。
+2. 验证仓库里存在 `clawgate/SKILL.md`。
 3. 明确告诉我最终安装到了哪个路径。
 4. 不要修改无关文件。
 5. 不要自动修改 `AGENTS.md`、standing orders 或其他激活文件。
-6. 如果当前环境还需要 `AGENTS.md` 或 standing order 片段才能真正激活，请直接输出 `watchdog-shrimp/references/agents-snippet.md` 的准确内容，并告诉我应粘贴到哪里。
+6. 如果当前环境还需要 `AGENTS.md` 或 standing order 片段才能真正激活，请直接输出 `clawgate/references/agents-snippet.md` 的准确内容，并告诉我应粘贴到哪里。
 7. 除非这些激活文件在我明确批准后被手动更新，否则不要宣称“已经激活完成”。
 
 输出格式要求：
@@ -200,7 +203,7 @@ git clone git@github.com:DmiyDing/watchdog-shrimp.git
 
 激活片段唯一来源：
 
-- [`watchdog-shrimp/references/agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md)
+- [`clawgate/references/agents-snippet.md`](./clawgate/references/agents-snippet.md)
 
 把这份准确片段粘贴到你真实使用的 always-injected OpenClaw 入口里。
 不要在 `README` 或 `AGENTS.md` 中再手写第二份“速查版”。
@@ -221,15 +224,15 @@ git clone git@github.com:DmiyDing/watchdog-shrimp.git
 当你手动把片段粘贴进真实的 always-injected entry point 后，可以把下面这段提示词发给 OpenClaw 做激活验收：
 
 ```text
-请验证 `watchdog-shrimp` 是否已经在我的 OpenClaw 环境中真正激活。
+请验证 `clawgate` 是否已经在我的 OpenClaw 环境中真正激活。
 
 检查要求：
 1. 读取我当前实际使用的 always-injected entry point。
-2. 确认其中是否存在 `watchdog-shrimp` 激活片段。
-3. 将已注入规则与 `watchdog-shrimp/references/agents-snippet.md` 做逐项比对。
+2. 确认其中是否存在 `clawgate` 激活片段。
+3. 将已注入规则与 `clawgate/references/agents-snippet.md` 做逐项比对。
 4. 只有在内容完全一致时才返回 `ACTIVE`。
-5. 如果存在任何 watchdog-shrimp 相关内容但不完全一致，返回 `DRIFT`。
-6. 如果完全没有 watchdog-shrimp 激活块，返回 `NOT ACTIVE`。
+5. 如果存在任何 clawgate 相关内容但不完全一致，返回 `DRIFT`。
+6. 如果完全没有 clawgate 激活块，返回 `NOT ACTIVE`。
 7. 如果存在漂移，逐条列出所有不一致。
 8. 不要静默修改任何文件。
 
@@ -242,7 +245,7 @@ git clone git@github.com:DmiyDing/watchdog-shrimp.git
 
 ## 协作模型
 
-`watchdog-shrimp` 最适合做治理路由器：
+`clawgate` 最适合做治理路由器：
 
 - 需求模糊或上下文缺失 -> `clarify-first`
 - 核心配置变更 -> 先走 health protection / healthcheck 流程
@@ -268,7 +271,7 @@ npm run validate
 npm run validate:evals
 ```
 
-如果你要把“本机单实例维护”从默认高危中合理下放，请优先阅读 [`single-instance-profile.md`](./watchdog-shrimp/references/single-instance-profile.md)。
+如果你要把“本机单实例维护”从默认高危中合理下放，请优先阅读 [`single-instance-profile.md`](./clawgate/references/single-instance-profile.md)。
 
 活体 OpenClaw 探针：
 
@@ -357,7 +360,7 @@ npm run validate:ci
 
 strict 模式常见失败含义：
 - `activation-check: NOT ACTIVE`：目标 `AGENTS.md` 路径尚不存在，或尚未注入精确 snippet
-- `activation-check: DRIFT`：目标包含 watchdog-shrimp 引用或标题，但 snippet 与源文件不完全匹配 — 常见原因：从 README 复制而非 agents-snippet.md、手动修改过 snippet、或仅提及关键字而未粘贴激活块
+- `activation-check: DRIFT`：目标包含 clawgate 引用或标题，但 snippet 与源文件不完全匹配 — 常见原因：从 README 复制而非 agents-snippet.md、手动修改过 snippet、或仅提及关键字而未粘贴激活块
 - `workspace-sync: DRIFT`：canonical workspace skill 路径缺失、过时，或与仓库副本不一致
 
 **CI 集成退出码速查：**
@@ -374,13 +377,13 @@ strict 模式常见失败含义：
 node tooling/check-activation.js /path/to/custom/AGENTS.md
 
 # 检查非默认 workspace sync 目标
-node tooling/check-workspace-sync.js /path/to/custom/skills/watchdog-shrimp
+node tooling/check-workspace-sync.js /path/to/custom/skills/clawgate
 ```
 
 strict gate 最小准备 runbook：
 1. 在你的真实 always-injected 入口创建目标文件，例如 `~/.openclaw/workspace/AGENTS.md`
-2. 把 [`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md) 的准确内容粘进去
-3. 确保 canonical 生效 skill 路径存在于 `~/.openclaw/workspace/skills/watchdog-shrimp`
+2. 把 [`agents-snippet.md`](./clawgate/references/agents-snippet.md) 的准确内容粘进去
+3. 确保 canonical 生效 skill 路径存在于 `~/.openclaw/workspace/skills/clawgate`
 4. 在运行 `npm run validate:ci` 之前，先把该生效副本与当前仓库同步
 
 ## 真实验收标准
@@ -439,8 +442,16 @@ workspace 副本检查脚本会对生效 skill 副本输出 `SYNCED` 或 `DRIFT`
 
 ```bash
 npm run validate
-clawhub publish watchdog-shrimp --version 0.1.0
+clawhub publish ./clawgate \
+  --slug clawgate \
+  --name "clawgate" \
+  --version 0.1.0 \
+  --tags latest \
+  --changelog "Rename skill to clawgate and align publish metadata"
 ```
+
+当前产品名：`clawgate`
+当前 GitHub 仓库路径：`DmiyDing/watchdog-shrimp`
 
 正式上传前，至少做这几步检查：
 

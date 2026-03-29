@@ -1,6 +1,6 @@
 ---
-name: watchdog-shrimp
-description: "This skill should be used for OpenClaw execution tasks where the main problem is governance, not implementation detail: too many confirmations for safe work, too little caution for OpenClaw-specific dangerous actions, or unclear boundaries between execute-now, confirm-before-run, and itemized critical approval. It is intended for OpenClaw runs that need low- and medium-risk work to execute directly with verification, high-risk work to stop for explicit confirmation, and critical work to require itemized approval with no merged authorization. It should not be used for purely informational requests or for deep requirement-discovery work where clarify-first is the better fit."
+name: clawgate
+description: "OpenClaw execution governance skill for approval gates, risk classification, and action boundaries. Use it when low/medium-risk work should execute directly with verification, while high-risk work requires explicit confirmation and critical work requires itemized approval."
 version: 0.1.0
 metadata:
   author: DmiyDing
@@ -9,7 +9,7 @@ metadata:
     homepage: https://github.com/DmiyDing/watchdog-shrimp
 ---
 
-# watchdog-shrimp
+# clawgate
 
 ## Governance Contract Summary
 
@@ -22,7 +22,7 @@ metadata:
 
 ## Purpose
 
-`watchdog-shrimp` is an OpenClaw execution-governance skill.
+`clawgate` is an OpenClaw execution-governance skill.
 
 It exists to prevent two failure modes:
 1. low-risk work being slowed down by repetitive permission loops
@@ -234,7 +234,7 @@ When information is incomplete but the risk trigger is already obvious:
 
 ## Required Skill Collaboration
 
-`watchdog-shrimp` is the governance router, not the only skill in the system.
+`clawgate` is the governance router, not the only skill in the system.
 When the action falls into one of the following lanes, route deliberately:
 
 - unresolved ambiguity, missing files, or assumption overload on non-explicit-high-risk work -> call `clarify-first`

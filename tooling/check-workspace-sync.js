@@ -22,14 +22,14 @@ function readOption(name, defaultValue) {
 }
 
 const root = path.resolve(__dirname, "..");
-const repoSkillPath = readOption("--repo-skill-path", path.join(root, "watchdog-shrimp"));
+const repoSkillPath = readOption("--repo-skill-path", path.join(root, "clawgate"));
 const workspaceSkillPath = readOption(
   "--workspace-skill-path",
-  path.join(os.homedir(), ".openclaw", "workspace", "skills", "watchdog-shrimp")
+  path.join(os.homedir(), ".openclaw", "workspace", "skills", "clawgate")
 );
 const extraSkillPath = readOption(
   "--extra-skill-path",
-  path.join(os.homedir(), ".openclaw", "skills", "watchdog-shrimp")
+  path.join(os.homedir(), ".openclaw", "skills", "clawgate")
 );
 
 const relativeFiles = [

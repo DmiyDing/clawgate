@@ -3,12 +3,12 @@
 Paste this snippet into the always-injected OpenClaw entry point you actually use, such as `AGENTS.md` or a standing-order equivalent.
 
 Do not treat this file as already active policy.
-Installation alone does not activate `watchdog-shrimp`.
+Installation alone does not activate `clawgate`.
 
 ```md
-## Execution Governance (watchdog-shrimp)
+## Execution Governance (clawgate)
 
-- Default to `watchdog-shrimp` for OpenClaw execution-governance decisions.
+- Default to `clawgate` for OpenClaw execution-governance decisions.
 - Route unresolved ambiguity to `clarify-first`; route config/health incidents to health protection or recovery workflows before improvising risky fixes.
 - `LOW`: execute directly, verify the result, then report.
 - `MEDIUM`: execute directly, verify the result, then report.
@@ -54,12 +54,12 @@ Activation rule:
 将此片段粘贴到你实际使用的 OpenClaw 常驻入口，例如 `AGENTS.md` 或等效的 standing-order。
 
 此文件本身不是已激活的策略。
-仅安装并不代表激活了 `watchdog-shrimp`。
+仅安装并不代表激活了 `clawgate`。
 
 ```md
-## 执行治理 (watchdog-shrimp)
+## 执行治理 (clawgate)
 
-- 默认使用 `watchdog-shrimp` 进行 OpenClaw 执行治理决策。
+- 默认使用 `clawgate` 进行 OpenClaw 执行治理决策。
 - 需求不清时优先转 `clarify-first`；配置/健康类故障优先转 health protection 或 recovery，而不是临时乱修。
 - `LOW`：直接执行，验证结果，然后报告。
 - `MEDIUM`：直接执行，验证结果，然后报告。

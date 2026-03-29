@@ -1,6 +1,6 @@
 # Eval Guide
 
-This directory contains seed evaluation cases for `watchdog-shrimp`.
+This directory contains seed evaluation cases for `clawgate`.
 
 ## What These Evals Cover
 

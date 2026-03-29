@@ -1,4 +1,4 @@
-# watchdog-shrimp: OpenClaw Execution Governance
+# clawgate: OpenClaw Execution Governance
 
 OpenClaw-specific execution governance for agents that are either too chatty or too reckless.
 
@@ -13,7 +13,7 @@ Most agent setups fail in one of two ways:
 1. Safe work gets slowed down by repetitive confirmations.
 2. Risky work moves too casually once tools are available.
 
-`watchdog-shrimp` is built to correct that execution posture for OpenClaw.
+`clawgate` is built to correct that execution posture for OpenClaw.
 It does not try to solve every agent problem.
 It focuses on one operational decision:
 
@@ -23,7 +23,7 @@ It focuses on one operational decision:
 
 ## What You Get
 
-After `watchdog-shrimp` is actually integrated into OpenClaw, an agent is much more likely to:
+After `clawgate` is actually integrated into OpenClaw, an agent is much more likely to:
 
 1. Execute low-risk work directly instead of asking again.
 2. Execute medium-risk work directly, then verify and report.
@@ -40,17 +40,17 @@ This repository needs real OpenClaw injection to become active governance.
 ## Promise To Contract Map
 
 - `LOW` / `MEDIUM` should move directly:
-  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md), [`checklist.md`](./watchdog-shrimp/references/checklist.md)
+  see [`SKILL.md`](./clawgate/SKILL.md), [`risk-matrix.md`](./clawgate/references/risk-matrix.md), [`checklist.md`](./clawgate/references/checklist.md)
 - `HIGH` should hard-stop for explicit approval and `CRITICAL` should require itemized approval:
-  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md), [`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md), [`confirmation-templates.md`](./watchdog-shrimp/references/confirmation-templates.md)
+  see [`SKILL.md`](./clawgate/SKILL.md), [`agents-snippet.md`](./clawgate/references/agents-snippet.md), [`risk-matrix.md`](./clawgate/references/risk-matrix.md), [`confirmation-templates.md`](./clawgate/references/confirmation-templates.md)
 - no-tail-filler is a governance goal for `LOW` / `MEDIUM` execution-result replies:
-  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`risk-matrix.md`](./watchdog-shrimp/references/risk-matrix.md), [`checklist.md`](./watchdog-shrimp/references/checklist.md)
+  see [`SKILL.md`](./clawgate/SKILL.md), [`risk-matrix.md`](./clawgate/references/risk-matrix.md), [`checklist.md`](./clawgate/references/checklist.md)
 - human acceptance prompts should reflect the same LOW/MEDIUM no-tail intent:
-  see [`openclaw-prompts.md`](./watchdog-shrimp/evals/openclaw-prompts.md), [`evals.json`](./watchdog-shrimp/evals/evals.json)
+  see [`openclaw-prompts.md`](./clawgate/evals/openclaw-prompts.md), [`evals.json`](./clawgate/evals/evals.json)
 - install is not activation:
-  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md)
+  see [`SKILL.md`](./clawgate/SKILL.md), [`agents-snippet.md`](./clawgate/references/agents-snippet.md)
 - plugin failure should route to recovery:
-  see [`SKILL.md`](./watchdog-shrimp/SKILL.md), [`examples.md`](./watchdog-shrimp/references/examples.md), [`evals.json`](./watchdog-shrimp/evals/evals.json)
+  see [`SKILL.md`](./clawgate/SKILL.md), [`examples.md`](./clawgate/references/examples.md), [`evals.json`](./clawgate/evals/evals.json)
 
 ## Core Behavior
 
@@ -80,12 +80,12 @@ Combining plugin install + config mutation + restart is always `HIGH`.
 
 ## Without vs With
 
-**Without `watchdog-shrimp`**
+**Without `clawgate`**
 - "Install this plugin and wire it into OpenClaw."
 - Agent treats it like normal dev setup work and pushes ahead too casually.
 - Result: shared config, gateway, or delivery behavior can break.
 
-**With `watchdog-shrimp`**
+**With `clawgate`**
 - After the skill is wired into real OpenClaw entry points, the same request is escalated as OpenClaw-sensitive.
 - Agent asks for explicit confirmation, states impact, and routes toward guarded install / recovery lanes when needed.
 - Result: lower friction on safe work, higher friction where it actually matters.
@@ -123,16 +123,16 @@ If the requirement is guaranteed blocking of dangerous actions, that belongs in 
 
 ## Repository Layout
 
-- `watchdog-shrimp/SKILL.md`: main skill contract
-- `watchdog-shrimp/references/risk-matrix.md`: OpenClaw-oriented risk rules
-- `watchdog-shrimp/references/confirmation-templates.md`: high-risk confirmation patterns
-- `watchdog-shrimp/references/examples.md`: example triggers and boundaries
-- `watchdog-shrimp/references/checklist.md`: execution checklist
-- `watchdog-shrimp/references/single-instance-profile.md`: single-instance downgrade profile
-- `watchdog-shrimp/evals/evals.json`: seed eval cases
-- `watchdog-shrimp/evals/README.md`: local eval usage notes
-- `watchdog-shrimp/evals/openclaw-prompts.md`: prompts for real OpenClaw acceptance checks
-- `watchdog-shrimp/references/agents-snippet.md`: single-source AGENTS activation snippet
+- `clawgate/SKILL.md`: main skill contract
+- `clawgate/references/risk-matrix.md`: OpenClaw-oriented risk rules
+- `clawgate/references/confirmation-templates.md`: high-risk confirmation patterns
+- `clawgate/references/examples.md`: example triggers and boundaries
+- `clawgate/references/checklist.md`: execution checklist
+- `clawgate/references/single-instance-profile.md`: single-instance downgrade profile
+- `clawgate/evals/evals.json`: seed eval cases
+- `clawgate/evals/README.md`: local eval usage notes
+- `clawgate/evals/openclaw-prompts.md`: prompts for real OpenClaw acceptance checks
+- `clawgate/references/agents-snippet.md`: single-source AGENTS activation snippet
 - `tooling/validate-evals.js`: local eval structure validator
 - `tooling/check-activation.js`: AGENTS activation drift checker
 - `tooling/check-workspace-sync.js`: workspace skill drift checker
@@ -156,8 +156,11 @@ git clone git@github.com:DmiyDing/watchdog-shrimp.git
 ```
 
 Then place this repository in your OpenClaw-compatible skills path, or register it through your local skill workflow.
-Prefer a single canonical active copy under `~/.openclaw/workspace/skills/watchdog-shrimp`.
-Avoid leaving a second stale copy under `~/.openclaw/skills/watchdog-shrimp`.
+Prefer a single canonical active copy under `~/.openclaw/workspace/skills/clawgate`.
+Avoid leaving a second stale copy under `~/.openclaw/skills/clawgate`.
+
+Current product name: `clawgate`.
+Current GitHub repository path: `DmiyDing/watchdog-shrimp` until the repository itself is renamed.
 
 After installation, restart the client if needed.
 If auto-loading is weak, explicitly invoke the skill by name.
@@ -167,15 +170,15 @@ If auto-loading is weak, explicitly invoke the skill by name.
 If your OpenClaw instance can access GitHub and has permission to manage local skills, you can paste this prompt to your own OpenClaw:
 
 ```text
-Install the `watchdog-shrimp` skill from `DmiyDing/watchdog-shrimp`.
+Install the `clawgate` skill from `DmiyDing/watchdog-shrimp`.
 
 Goals:
 1. Install or clone the skill into the local skills path you use for OpenClaw.
-2. Verify that the repository contains `watchdog-shrimp/SKILL.md`.
+2. Verify that the repository contains `clawgate/SKILL.md`.
 3. Tell me exactly where it was installed.
 4. Do not edit unrelated files.
 5. Do not edit `AGENTS.md`, standing orders, or other activation files automatically.
-6. If my environment requires an `AGENTS.md` or standing-order snippet for activation, print the exact contents of `watchdog-shrimp/references/agents-snippet.md` and tell me where to paste it.
+6. If my environment requires an `AGENTS.md` or standing-order snippet for activation, print the exact contents of `clawgate/references/agents-snippet.md` and tell me where to paste it.
 7. Do not claim activation is complete unless those activation files were manually updated after I approved that exact change.
 
 Output format:
@@ -200,7 +203,7 @@ For stable behavior, pair it with a persistent entry point such as:
 
 Activation snippet source of truth:
 
-- [`watchdog-shrimp/references/agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md)
+- [`clawgate/references/agents-snippet.md`](./clawgate/references/agents-snippet.md)
 
 Paste that exact snippet into your actual always-injected OpenClaw entry point.
 Do not maintain a second handwritten shortcut version in `README` or `AGENTS.md`.
@@ -221,15 +224,15 @@ Good smoke tests:
 After you manually paste the snippet into your real always-injected entry point, you can ask OpenClaw to validate the activation with this prompt:
 
 ```text
-Validate whether `watchdog-shrimp` is now activated in my OpenClaw environment.
+Validate whether `clawgate` is now activated in my OpenClaw environment.
 
 Checks:
 1. Read the always-injected entry point I actually use.
-2. Confirm whether the `watchdog-shrimp` activation snippet is present.
-3. Compare the injected rule against `watchdog-shrimp/references/agents-snippet.md`.
+2. Confirm whether the `clawgate` activation snippet is present.
+3. Compare the injected rule against `clawgate/references/agents-snippet.md`.
 4. Return `ACTIVE` only if the injected content matches exactly.
-5. Return `DRIFT` if watchdog-shrimp-related content exists but differs in any way.
-6. Return `NOT ACTIVE` if no watchdog-shrimp activation block exists.
+5. Return `DRIFT` if clawgate-related content exists but differs in any way.
+6. Return `NOT ACTIVE` if no clawgate activation block exists.
 7. If there is drift, list every mismatch line-by-line.
 8. Do not silently modify files.
 
@@ -242,7 +245,7 @@ Output format:
 
 ## Collaboration Model
 
-`watchdog-shrimp` works best as a governance router:
+`clawgate` works best as a governance router:
 
 - ambiguity or missing context -> `clarify-first`
 - core config mutation -> health protection / healthcheck workflow first
@@ -268,7 +271,7 @@ Run the local validator with:
 npm run validate:evals
 ```
 
-Use [`single-instance-profile.md`](./watchdog-shrimp/references/single-instance-profile.md) when you want a documented downgrade profile for one local OpenClaw instance with backup + validation + rollback.
+Use [`single-instance-profile.md`](./clawgate/references/single-instance-profile.md) when you want a documented downgrade profile for one local OpenClaw instance with backup + validation + rollback.
 
 Live OpenClaw probe:
 
@@ -377,7 +380,7 @@ Use `npm run validate:ci` only in CI or environment images where the OpenClaw ta
 
 Common strict-mode failure meanings:
 - `activation-check: NOT ACTIVE`: the target `AGENTS.md` path does not exist yet, or the exact snippet has not been injected
-- `activation-check: DRIFT`: the target contains watchdog-shrimp references or headers but the snippet does not exactly match — common causes: copied from README instead of agents-snippet.md, manually modified snippet, or keyword mention without activation block
+- `activation-check: DRIFT`: the target contains clawgate references or headers but the snippet does not exactly match — common causes: copied from README instead of agents-snippet.md, manually modified snippet, or keyword mention without activation block
 - `workspace-sync: DRIFT`: the canonical workspace skill path is missing, stale, or differs from the repository copy
 
 **Exit codes for CI integration:**
@@ -394,13 +397,13 @@ Common strict-mode failure meanings:
 node tooling/check-activation.js /path/to/custom/AGENTS.md
 
 # Check a non-default workspace sync target
-node tooling/check-workspace-sync.js /path/to/custom/skills/watchdog-shrimp
+node tooling/check-workspace-sync.js /path/to/custom/skills/clawgate
 ```
 
 Minimal strict-gate runbook:
 1. Create the real always-injected target file for your environment, such as `~/.openclaw/workspace/AGENTS.md`.
-2. Paste the exact snippet from [`agents-snippet.md`](./watchdog-shrimp/references/agents-snippet.md) into that target.
-3. Ensure the canonical active skill path exists at `~/.openclaw/workspace/skills/watchdog-shrimp`.
+2. Paste the exact snippet from [`agents-snippet.md`](./clawgate/references/agents-snippet.md) into that target.
+3. Ensure the canonical active skill path exists at `~/.openclaw/workspace/skills/clawgate`.
 4. Sync that active skill copy with this repository before running `npm run validate:ci`.
 If your environment uses different paths, pass them explicitly to `check-activation.js` or `check-workspace-sync.js` instead of assuming the defaults.
 
@@ -439,8 +442,16 @@ Suggested flow:
 
 ```bash
 npm run validate
-clawhub publish watchdog-shrimp --version 0.1.0
+clawhub publish ./clawgate \
+  --slug clawgate \
+  --name "clawgate" \
+  --version 0.1.0 \
+  --tags latest \
+  --changelog "Rename skill to clawgate and align publish metadata"
 ```
+
+Current product name: `clawgate`
+Current GitHub repository path: `DmiyDing/watchdog-shrimp`
 
 Suggested release checks before uploading:
 

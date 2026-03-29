@@ -1,6 +1,6 @@
 # Release Checklist
 
-Use this before publishing or re-installing `watchdog-shrimp` into a live OpenClaw environment.
+Use this before publishing or re-installing `clawgate` into a live OpenClaw environment.
 
 ## Release Runbook (ordered)
 
@@ -17,10 +17,10 @@ Use this before publishing or re-installing `watchdog-shrimp` into a live OpenCl
 - Run `npm run validate`
 - Run `npm run validate:workspace-sync` if you already have an active workspace copy
 - Run `npm run validate:consistency` — this checks English-language HIGH / CRITICAL fields only; Chinese snippet and README.zh-CN.md wording must be verified manually (see below)
-- Confirm `README.md`, `README.zh-CN.md`, `watchdog-shrimp/SKILL.md`, and `watchdog-shrimp/references/agents-snippet.md` agree on `LOW`, `MEDIUM`, `HIGH`, and `CRITICAL`
+- Confirm `README.md`, `README.zh-CN.md`, `clawgate/SKILL.md`, and `clawgate/references/agents-snippet.md` agree on `LOW`, `MEDIUM`, `HIGH`, and `CRITICAL`
 - **Manual consistency check for Chinese paths**: verify `README.zh-CN.md` and the Chinese snippet in `agents-snippet.md` match the English HIGH / CRITICAL fields and authorization-granularity wording
 - Confirm install guidance still says install is not activation
-- Confirm `watchdog-shrimp/references/agents-snippet.md` remains the only activation source of truth
+- Confirm `clawgate/references/agents-snippet.md` remains the only activation source of truth
 - Confirm no-tail-filler still applies only to `LOW` / `MEDIUM` execution-result replies
 - Confirm activation / audit / validation structured-field exceptions still use the same wording across docs
 - Confirm `openclaw-prompts.md` still matches the intended `evals.json` seeds for LOW/MEDIUM no-tail-filler acceptance
@@ -51,9 +51,9 @@ Use `npm run validate:activation` (warn-only, always exits 0) for local checks.
 
 - Confirm the active skill path you intend OpenClaw to use
 - Confirm `AGENTS.md` or the real always-injected entry point contains the exact activation snippet
-- Confirm there is not a second stale copy under `~/.openclaw/skills/watchdog-shrimp`
+- Confirm there is not a second stale copy under `~/.openclaw/skills/clawgate`
 - Confirm plugin failure guidance still defaults to stop-and-route-to-recovery
-- Confirm the active single-instance policy, if used, still matches [`single-instance-profile.md`](./watchdog-shrimp/references/single-instance-profile.md)
+- Confirm the active single-instance policy, if used, still matches [`single-instance-profile.md`](./clawgate/references/single-instance-profile.md)
 
 ## Acceptance Checks
 
@@ -87,7 +87,7 @@ Use semantic versioning (MAJOR.MINOR.PATCH):
 
 **Current version**: 0.1.0
 
-Before publishing, update the version in `watchdog-shrimp/SKILL.md` frontmatter, `package.json`, and `CHANGELOG.md`.
+Before publishing, update the version in `clawgate/SKILL.md` frontmatter, `package.json`, and `CHANGELOG.md`.
 
 ## Publishing
 
@@ -96,5 +96,10 @@ Before publishing, update the version in `watchdog-shrimp/SKILL.md` frontmatter,
 npm run validate
 
 # Publish to ClawHub
-clawhub publish watchdog-shrimp --version 0.1.0
+clawhub publish ./clawgate \
+  --slug clawgate \
+  --name "clawgate" \
+  --version 0.1.0 \
+  --tags latest \
+  --changelog "Rename skill to clawgate and align publish metadata"
 ```
