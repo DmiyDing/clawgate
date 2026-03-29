@@ -146,21 +146,18 @@ If the requirement is guaranteed blocking of dangerous actions, that belongs in 
 If your client supports repo-based skill installation:
 
 ```bash
-npx -y skills add DmiyDing/watchdog-shrimp
+npx -y skills add DmiyDing/clawgate
 ```
 
 If your OpenClaw environment prefers local paths:
 
 ```bash
-git clone git@github.com:DmiyDing/watchdog-shrimp.git
+git clone git@github.com:DmiyDing/clawgate.git
 ```
 
 Then place this repository in your OpenClaw-compatible skills path, or register it through your local skill workflow.
 Prefer a single canonical active copy under `~/.openclaw/workspace/skills/clawgate`.
 Avoid leaving a second stale copy under `~/.openclaw/skills/clawgate`.
-
-Current product name: `clawgate`.
-Current GitHub repository path: `DmiyDing/watchdog-shrimp` until the repository itself is renamed.
 
 After installation, restart the client if needed.
 If auto-loading is weak, explicitly invoke the skill by name.
@@ -170,7 +167,7 @@ If auto-loading is weak, explicitly invoke the skill by name.
 If your OpenClaw instance can access GitHub and has permission to manage local skills, you can paste this prompt to your own OpenClaw:
 
 ```text
-Install the `clawgate` skill from `DmiyDing/watchdog-shrimp`.
+Install the `clawgate` skill from `DmiyDing/clawgate`.
 
 Goals:
 1. Install or clone the skill into the local skills path you use for OpenClaw.
@@ -451,7 +448,7 @@ clawhub publish ./clawgate \
 ```
 
 Current product name: `clawgate`
-Current GitHub repository path: `DmiyDing/watchdog-shrimp`
+Current GitHub repository path: `DmiyDing/clawgate`
 
 Suggested release checks before uploading:
 

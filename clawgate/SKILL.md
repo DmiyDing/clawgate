@@ -6,7 +6,7 @@ metadata:
   author: DmiyDing
   execution_precedence: TERMINAL_GUARDRAIL
   openclaw:
-    homepage: https://github.com/DmiyDing/watchdog-shrimp
+    homepage: https://github.com/DmiyDing/clawgate
 ---
 
 # clawgate

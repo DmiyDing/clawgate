@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- renamed the published skill identity from `watchdog-shrimp` to `clawgate`
+- renamed the published skill identity to `clawgate`
 - risk-level changes:
   - added `CRITICAL`
   - added bounded approval-window handling

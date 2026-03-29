@@ -146,21 +146,18 @@
 如果你的客户端支持基于仓库的 skill 安装，可以直接执行：
 
 ```bash
-npx -y skills add DmiyDing/watchdog-shrimp
+npx -y skills add DmiyDing/clawgate
 ```
 
 如果你的 OpenClaw 环境更偏向本地路径：
 
 ```bash
-git clone git@github.com:DmiyDing/watchdog-shrimp.git
+git clone git@github.com:DmiyDing/clawgate.git
 ```
 
 然后把这个仓库放到 OpenClaw 兼容的 skills 路径里，或者通过你的本地 skill 工作流注册它。
 建议只保留一个 canonical 生效副本：`~/.openclaw/workspace/skills/clawgate`。
 避免同时留一个陈旧的 `~/.openclaw/skills/clawgate` 副本。
-
-当前产品名是 `clawgate`。
-当前 GitHub 仓库路径仍是 `DmiyDing/watchdog-shrimp`，直到仓库本身真正改名。
 
 如有需要，安装后重启客户端。
 如果自动加载不稳定，就显式按名称调用这个 skill。
@@ -170,7 +167,7 @@ git clone git@github.com:DmiyDing/watchdog-shrimp.git
 如果你的 OpenClaw 实例可以访问 GitHub，并且有权限管理本地 skills，可以把下面这段提示词直接发给你自己的 OpenClaw：
 
 ```text
-请从 `DmiyDing/watchdog-shrimp` 安装 `clawgate` skill。
+请从 `DmiyDing/clawgate` 安装 `clawgate` skill。
 
 目标：
 1. 把这个 skill 安装或克隆到当前 OpenClaw 使用的本地 skills 路径中。
@@ -451,7 +448,7 @@ clawhub publish ./clawgate \
 ```
 
 当前产品名：`clawgate`
-当前 GitHub 仓库路径：`DmiyDing/watchdog-shrimp`
+当前 GitHub 仓库路径：`DmiyDing/clawgate`
 
 正式上传前，至少做这几步检查：
 
