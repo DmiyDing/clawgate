@@ -1,6 +1,6 @@
 # clawgate：OpenClaw 执行治理
 
-面向 OpenClaw 的执行治理 skill，用来解决 Agent 不是太啰嗦、就是太冒进的问题。
+这是一个面向 OpenClaw 的执行治理 skill，用来减少低风险确认噪音，并在高风险或关键动作真正滑出去之前把它们硬停下来。
 
 [English README](./README.md) · License: [Apache-2.0](./LICENSE)
 
@@ -13,7 +13,7 @@
 1. 安全的事情也反复确认，效率很差。
 2. 有风险的事情一旦拿到工具，又推进得太随意。
 
-`clawgate` 就是为了解决 OpenClaw 里的这个执行姿态问题。
+`clawgate` 只做一件事：让 OpenClaw 的执行更稳，同时不把日常工作变慢。
 它不想解决所有 Agent 问题。
 它只聚焦一个核心判断：
 
@@ -30,7 +30,8 @@
 3. 以 LOW/MEDIUM 连续闭环为治理目标：尽量只在 verify + report 后收尾，不附带诸如“下一步…”或“如果需要我可以…”这种无意义尾巴式 offer。
 4. 对破坏性、提权、成本敏感、外发、以及 OpenClaw 核心变更类动作硬停，并把真正关键的动作拆成逐项授权。
 5. 用 OpenClaw 语境升级风险，而不是套普通开发环境的经验法则。
-6. 对 skill 层能力和 runtime 层能力边界保持诚实。
+6. 让人类和 OpenClaw 搜索都更容易识别它是 approval / confirmation / risk governance 类 skill。
+7. 对 skill 层能力和 runtime 层能力边界保持诚实。
 
 这里的 no-tail-filler 约束针对“执行结果回复”，不否定激活验收或审计模板里被明确要求的结构化字段名。
 

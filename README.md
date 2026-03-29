@@ -1,6 +1,6 @@
 # clawgate: OpenClaw Execution Governance
 
-OpenClaw-specific execution governance for agents that are either too chatty or too reckless.
+An OpenClaw governance skill that keeps low-risk work moving, reduces confirmation noise, and hard-stops risky actions before they slip through.
 
 [中文说明](./README.zh-CN.md) · License: [Apache-2.0](./LICENSE)
 
@@ -13,7 +13,7 @@ Most agent setups fail in one of two ways:
 1. Safe work gets slowed down by repetitive confirmations.
 2. Risky work moves too casually once tools are available.
 
-`clawgate` is built to correct that execution posture for OpenClaw.
+`clawgate` is built for one job: make OpenClaw execution safer without making routine work slower.
 It does not try to solve every agent problem.
 It focuses on one operational decision:
 
@@ -30,7 +30,8 @@ After `clawgate` is actually integrated into OpenClaw, an agent is much more lik
 3. Aim for a continuous LOW/MEDIUM closed loop: end with verify + report only, without unnecessary tail offers like `Next Step` or `If you need, I can...`.
 4. Hard-stop on destructive, privileged, costly, external, or OpenClaw-core actions, and split truly critical actions into itemized approval.
 5. Escalate OpenClaw-specific surfaces more aggressively than generic developer tasks.
-6. Stay honest about the boundary between skill-layer guidance and runtime enforcement.
+6. Give both operators and OpenClaw search a clearer signal that this is an approval, confirmation, and risk-governance skill.
+7. Stay honest about the boundary between skill-layer guidance and runtime enforcement.
 
 That no-tail-filler rule is an execution-result preference, not a ban on explicit structured fields in activation or audit templates.
 

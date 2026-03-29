@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.1.1
+
+- polished ClawHub discoverability with clearer approval / confirmation / risk-governance wording
+- updated `SKILL.md` and package metadata to better match OpenClaw search intent
+- sharpened the README opening so operators can immediately understand the value proposition
+
+## 0.1.0
 
 - renamed the published skill identity to `clawgate`
 - risk-level changes:

@@ -1,7 +1,7 @@
 ---
 name: clawgate
-description: "OpenClaw execution governance skill for approval gates, risk classification, and action boundaries. Use it when low/medium-risk work should execute directly with verification, while high-risk work requires explicit confirmation and critical work requires itemized approval."
-version: 0.1.0
+description: "OpenClaw execution governance skill for approval gates, risk classification, confirmation policy, and action boundaries. Use it to reduce low-risk confirmation noise while hard-stopping high-risk and critical actions."
+version: 0.1.1
 metadata:
   author: DmiyDing
   execution_precedence: TERMINAL_GUARDRAIL

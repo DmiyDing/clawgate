@@ -1,7 +1,7 @@
 {
   "name": "clawgate",
-  "version": "0.1.0",
-  "description": "clawgate: OpenClaw execution governance, approval boundaries, and risk-based action gating.",
+  "version": "0.1.1",
+  "description": "clawgate: OpenClaw execution governance, approval gates, confirmation policy, and risk-based action boundaries.",
   "license": "Apache-2.0",
   "scripts": {
     "validate": "npm run validate:evals && npm run validate:consistency && npm run validate:activation",
