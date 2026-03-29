@@ -452,7 +452,7 @@ Activation and audit templates may still contain explicit fields such as `Next S
 
 ClawHub's current public docs indicate:
 
-- the publish surface is the skill folder
+- the publish surface is the skill folder only; do not upload the repository root
 - `SKILL.md` frontmatter is used as skill metadata
 - publish requires an explicit semver version
 
@@ -465,7 +465,7 @@ clawhub publish ./clawgate \
   --name "clawgate" \
   --version 0.1.0 \
   --tags latest \
-  --changelog "Rename skill to clawgate and align publish metadata"
+  --changelog "Initial public release of clawgate"
 ```
 
 Current product name: `clawgate`

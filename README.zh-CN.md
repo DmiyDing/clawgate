@@ -449,7 +449,7 @@ workspace 副本检查脚本会对生效 skill 副本输出 `SYNCED` 或 `DRIFT`
 
 根据当前公开的 ClawHub 文档：
 
-- 真正的发布面是 skill 文件夹
+- 真正的发布面只应是 skill 文件夹，不要上传整个仓库根目录
 - `SKILL.md` frontmatter 会被当作技能元数据
 - 发布时需要显式 semver 版本号
 
@@ -462,7 +462,7 @@ clawhub publish ./clawgate \
   --name "clawgate" \
   --version 0.1.0 \
   --tags latest \
-  --changelog "Rename skill to clawgate and align publish metadata"
+  --changelog "Initial public release of clawgate"
 ```
 
 当前产品名：`clawgate`

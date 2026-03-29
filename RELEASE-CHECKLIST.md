@@ -101,5 +101,5 @@ clawhub publish ./clawgate \
   --name "clawgate" \
   --version 0.1.0 \
   --tags latest \
-  --changelog "Rename skill to clawgate and align publish metadata"
+  --changelog "Initial public release of clawgate"
 ```
