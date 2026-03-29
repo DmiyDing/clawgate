@@ -27,7 +27,9 @@ const files = {
 
 // Expected confirmation fields (canonical)
 const EXPECTED_HIGH_FIELDS = ["scope", "impact", "consequence", "continue"];
-const EXPECTED_CRITICAL_FIELDS = ["critical", "scope", "impact", "consequence", "authorization", "continue"];
+const EXPECTED_HIGH_TEMPLATE_FIELDS = ["action", ...EXPECTED_HIGH_FIELDS];
+const EXPECTED_CRITICAL_FIELDS = ["critical", "authorization", "approve", "continue", "blocked"];
+const EXPECTED_MEDIUM_FIELDS = ["action", "verify", "result"];
 
 function fail(message) {
   console.error(`consistency-check: FAIL - ${message}`);
@@ -82,8 +84,7 @@ function checkSkillCorePolicy(content) {
 
 // Check 2: SKILL.md HIGH Execution Strategy should have all fields
 function checkSkillExecutionStrategy(content) {
-  // Look for the HIGH confirmation list
-  const highSectionMatch = content.match(/### HIGH[\s\S]*?Require second confirmation that explicitly covers:\s*([\s\S]*?)(?=\n\n|Do not continue)/);
+  const highSectionMatch = content.match(/### HIGH[\s\S]*?The `HIGH` reply must follow this protocol:\s*([\s\S]*?)(?=\n\nDo not continue)/);
   if (!highSectionMatch) {
     fail("SKILL.md: Cannot find HIGH Execution Strategy section");
     return false;
@@ -129,7 +130,7 @@ function checkAgentsSnippet(content) {
   const fieldsStr = highLineMatch[0].toLowerCase();
   const missing = [];
 
-  for (const field of EXPECTED_HIGH_FIELDS) {
+  for (const field of EXPECTED_HIGH_TEMPLATE_FIELDS) {
     if (!fieldsStr.includes(field)) {
       missing.push(field);
     }
@@ -156,7 +157,14 @@ function checkConfirmationTemplates(content) {
   const templateContent = englishTemplateMatch[1];
 
   // Check for required fields in template
-  const requiredTemplateFields = ["risk: high", "scope", "impact", "possible consequence", "continue or cancel"];
+  const requiredTemplateFields = [
+    "risk: high",
+    "action",
+    "scope",
+    "impact",
+    "possible consequence",
+    "continue or cancel",
+  ];
   const missing = [];
 
   for (const field of requiredTemplateFields) {
@@ -178,6 +186,68 @@ function checkConfirmationTemplates(content) {
 
   pass("confirmation-templates.md HIGH template fields OK");
   return true;
+}
+
+function checkMediumCoverage(skillContent, agentsContent, templatesContent, riskMatrixContent) {
+  let ok = true;
+
+  const mediumSectionMatch = skillContent.match(/### MEDIUM[\s\S]*?Use the fixed execution report shape:\s*([\s\S]*?)(?=\n\nDo not collapse)/);
+  if (!mediumSectionMatch) {
+    fail("SKILL.md: Cannot find MEDIUM execution report shape");
+    ok = false;
+  } else {
+    const section = mediumSectionMatch[1].toLowerCase();
+    const missing = EXPECTED_MEDIUM_FIELDS.filter((field) => !section.includes(field));
+    if (missing.length > 0) {
+      fail(`SKILL.md MEDIUM execution report missing fields: ${missing.join(", ")}`);
+      ok = false;
+    }
+  }
+
+  const agentsMediumLine = agentsContent.match(/`MEDIUM`:[^\n]*/);
+  if (!agentsMediumLine) {
+    fail("agents-snippet.md: Cannot find MEDIUM line");
+    ok = false;
+  } else {
+    const line = agentsMediumLine[0].toLowerCase();
+    const missing = EXPECTED_MEDIUM_FIELDS.filter((field) => !line.includes(field));
+    if (missing.length > 0) {
+      fail(`agents-snippet.md MEDIUM line missing fields: ${missing.join(", ")}`);
+      ok = false;
+    }
+  }
+
+  const mediumTemplateMatch = templatesContent.match(/### Result Template[\s\S]*?```markdown([\s\S]*?)```/);
+  if (!mediumTemplateMatch) {
+    fail("confirmation-templates.md: Cannot find MEDIUM Result Template");
+    ok = false;
+  } else {
+    const template = mediumTemplateMatch[1].toLowerCase();
+    const missing = EXPECTED_MEDIUM_FIELDS.filter((field) => !template.includes(field));
+    if (missing.length > 0) {
+      fail(`confirmation-templates.md MEDIUM Result Template missing fields: ${missing.join(", ")}`);
+      ok = false;
+    }
+  }
+
+  const mediumBehaviorMatch = riskMatrixContent.match(/## MEDIUM[\s\S]*?Behavior:([\s\S]*?)(?=\n##|$)/i);
+  if (!mediumBehaviorMatch) {
+    fail("risk-matrix.md: Cannot find MEDIUM Behavior section");
+    ok = false;
+  } else {
+    const behavior = mediumBehaviorMatch[1].toLowerCase();
+    const missing = EXPECTED_MEDIUM_FIELDS.filter((field) => !behavior.includes(field));
+    if (missing.length > 0) {
+      fail(`risk-matrix.md MEDIUM Behavior missing fields: ${missing.join(", ")}`);
+      ok = false;
+    }
+  }
+
+  if (ok) {
+    pass("MEDIUM execution report fields OK");
+  }
+
+  return ok;
 }
 
 // Check 5: risk-matrix.md HIGH Behavior section
@@ -214,7 +284,7 @@ function checkCriticalCoverage(content, agentsContent, templatesContent, riskMat
     ok = false;
   }
 
-  const criticalSectionMatch = content.match(/### CRITICAL[\s\S]*?Require itemized confirmation that explicitly covers:\s*([\s\S]*?)(?=\n\n|Do not collapse)/);
+  const criticalSectionMatch = content.match(/### CRITICAL[\s\S]*?The `CRITICAL` reply must follow this protocol:\s*([\s\S]*?)(?=\n\nThe critical action items must be concrete authorization targets)/);
   if (!criticalSectionMatch) {
     fail("SKILL.md: Cannot find CRITICAL Execution Strategy section");
     ok = false;
@@ -260,7 +330,7 @@ function checkCriticalCoverage(content, agentsContent, templatesContent, riskMat
     ok = false;
   } else {
     const behavior = criticalBehaviorMatch[1].toLowerCase();
-    const missing = ["item", "scope", "impact", "consequence", "authorization", "continue"].filter(
+    const missing = ["item", "authorization", "approve", "continue", "blocked"].filter(
       (token) => !behavior.includes(token)
     );
     if (missing.length > 0) {
@@ -302,11 +372,12 @@ if (riskMatrixContent) {
 }
 
 if (skillContent && agentsContent && templatesContent && riskMatrixContent) {
+  if (!checkMediumCoverage(skillContent, agentsContent, templatesContent, riskMatrixContent)) allPassed = false;
   if (!checkCriticalCoverage(skillContent, agentsContent, templatesContent, riskMatrixContent)) allPassed = false;
 }
 
 if (allPassed && process.exitCode !== 1) {
-  pass("HIGH / CRITICAL confirmation fields consistent in English-language paths (SKILL.md, agents-snippet.md, confirmation-templates.md, risk-matrix.md)");
+  pass("MEDIUM / HIGH / CRITICAL confirmation fields consistent in English-language paths (SKILL.md, agents-snippet.md, confirmation-templates.md, risk-matrix.md)");
   pass("Note: Chinese snippet and README wording verified by RELEASE-CHECKLIST manual review");
   process.exit(0);
 } else {

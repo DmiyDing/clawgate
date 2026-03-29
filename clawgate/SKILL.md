@@ -16,7 +16,7 @@ metadata:
 - `LOW` and `MEDIUM` should execute, verify, and report
 - `HIGH` should stop for explicit approval
 - `CRITICAL` should stop for itemized approval; do not merge authorization across actions
-- `HIGH` and `CRITICAL` should prefer a stable governance-output protocol with explicit risk heading and blocked fields
+- `HIGH` and `CRITICAL` must use a stable governance-output protocol with explicit risk heading and blocked fields
 - machine-readable governance fields should stay stable when a harness or control plane expects them: `risk_level`, `blocked`, `missing_fields`, `approval_mode`, `continue_or_cancel`, `itemized_actions`
 - no-tail-filler is a governance goal for `LOW` and `MEDIUM` execution-result endings
 - no-tail-filler does not apply to explicitly required structured fields in activation, audit, or validation templates
@@ -57,7 +57,7 @@ They should not silently edit `AGENTS.md` or claim activation is complete when i
 ## Core Policy
 
 - `LOW`: execute directly, verify the result, then report
-- `MEDIUM`: execute directly, verify the result, then report
+- `MEDIUM`: execute directly and report in the fixed order `Action` -> `Verify` -> `Result`
 - `HIGH`: require explicit second confirmation on scope, impact, consequence, and continue/cancel before any execution
 - `CRITICAL`: require itemized confirmation for each critical action; do not accept combined approval for future deletes, restarts, sends, or costly loops
 
@@ -93,7 +93,8 @@ The following surfaces are OpenClaw-sensitive and should escalate more aggressiv
 - outbound delivery integrations and external messaging paths
 - cross-instance operations, shared agent surfaces, or shared workspace automation
 
-If one request combines plugin change + config mutation + restart, treat the whole action as blocked `HIGH` even if each sub-step might look only `MEDIUM` in isolation.
+If one request combines plugin change + config mutation + restart, treat the whole action as always blocked `HIGH` even if each sub-step might look only `MEDIUM` in isolation.
+It must not proceed before explicit `Continue or Cancel` confirmation.
 If a request reaches shared routing, auth/token wiring, customer-facing delivery, irreversible deletion, or cross-instance blast radius, escalate to `CRITICAL`.
 
 Composite critical escalation rule:
@@ -130,9 +131,9 @@ Preference adaptation:
 
 Map risk to behavior:
 - `LOW` -> execute -> verify -> report
-- `MEDIUM` -> execute -> verify -> report
-- `HIGH` -> output a blocked confirmation with `Risk: HIGH` + `Scope` + `Impact` + `Possible Consequence` + `Missing Fields` when relevant + `Continue or Cancel` -> wait
-- `CRITICAL` -> output a blocked confirmation with `Risk: CRITICAL` + `Critical Action Items` + `Authorization Granularity` + `Approve Each Item` + `Continue or Cancel` -> wait -> execute only approved items -> verify -> report
+- `MEDIUM` -> execute -> report `Action` + `Verify` + `Result`
+- `HIGH` -> output the blocked `HIGH` protocol exactly -> wait
+- `CRITICAL` -> output the blocked `CRITICAL` protocol exactly -> wait -> execute only approved items -> verify -> report
 
 ### 4. Recovery Layer
 
@@ -181,67 +182,84 @@ Execute now.
 Verify the outcome.
 Report clearly after execution.
 
-Use the compact execution report shape:
+Use the fixed execution report shape:
 - Action
 - Verify
 - Result
 
+Do not collapse this to `Done.` or an unstructured summary.
+
 ### HIGH
 
-Require second confirmation that explicitly covers:
-- risk level
-- scope
-- impact
-- possible consequence
-- continue or cancel
+The `HIGH` reply must follow this protocol:
+- first line must output `Risk: HIGH`
+- then output `Action`
+- then output `Scope`
+- then output `Impact`
+- then output `Possible Consequence`
+- then output `Continue or Cancel`
+- if information is missing, append `Missing Fields`
+- if information is missing, also output `Blocked Until`
 
 Do not continue until the user confirms.
 Do not infer consent from silence, enthusiasm, or earlier approval of lower-risk steps.
 Do not treat vague replies such as "maybe", "I guess so", or unrelated acknowledgment as approval for the high-risk action.
 If key fields are missing but the request already hits a clear `HIGH` trigger, stop as `HIGH`, list the missing fields, and require them before execution.
 If key fields are missing, the information-gathering step must stay nested inside the blocked confirmation block; it must not degrade into ordinary Q&A.
+High-risk missing-information replies must output `Blocked Until`; they must not merely ask for more information.
 
 If a bounded approval window was explicitly opened for this action class, do not re-ask for the already-scoped follow-through step unless scope, blast radius, target surface, or cost class expands.
 
-Prefer this field order when possible:
+Use this field order:
 - Risk: HIGH
+- Action
 - Scope
 - Impact
 - Possible Consequence
-- Missing Fields
 - Continue or Cancel
+- Missing Fields
+- Blocked Until
 
 If key fields are missing but the request already hits a clear `HIGH` trigger, do not downgrade to ordinary clarification.
 Keep the reply in the `HIGH` lane and include:
 - Risk: HIGH
+- Action
+- Scope
+- Impact
+- Possible Consequence
+- Continue or Cancel
 - Missing Fields
 - Blocked Until
-- Scope
-- Continue or Cancel
 
 ### CRITICAL
 
-Require itemized confirmation that explicitly covers:
-- risk level
-- each critical action item
-- audience groups or channels when outbound delivery is involved
-- scope
-- impact
-- possible consequence
-- authorization granularity
-- continue or cancel for each approved item
+The `CRITICAL` reply must follow this protocol:
+- first line must output `Risk: CRITICAL`
+- then output `Critical Action Items`
+- then output `Authorization Granularity`
+- then output `Approve Each Item`
+- then output `Continue or Cancel`
+- then output `Blocked Until`
+- if outbound delivery is involved, also output destination-level audience and channel fields
+
+The critical action items must be concrete authorization targets, not just questions.
+Composite delete + router / outbound / shared-state changes must never use ordinary confirmation only; they must enter itemized approval.
 
 Do not collapse multiple critical actions into one approval.
 Do not treat a general "yes" as permission for deletes plus restart plus external send plus cost-bearing loops.
 Do not treat a prior approval window as permission for `CRITICAL`.
 Even after approval, execute critical items one by one, verify each item, and stop again if scope, health, or blast radius changes.
+I will not execute this on a general confirmation.
+Merged approval is not accepted.
+Each item must be approved separately.
 
-Prefer this field order when possible:
+Use this field order:
 - Risk: CRITICAL
 - Critical Action Items
 - Authorization Granularity
 - Approve Each Item
 - Continue or Cancel
+- Blocked Until
 
 ## Confirmation Style
 

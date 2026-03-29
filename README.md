@@ -60,12 +60,13 @@ This repository needs real OpenClaw injection to become active governance.
 - `HIGH`: require an actually blocked confirmation with `Risk: HIGH`, `Scope`, `Impact`, `Possible Consequence`, `Missing Fields` when relevant, and `Continue or Cancel`
 - `CRITICAL`: require itemized approval with explicit authorization granularity and `Approve Each Item`
 
-## Current Known Issues
+## Known Real Gaps
 
 These are real governance gaps that this repository is actively fixing; they are not installation problems:
-- `HIGH` can still degrade into risk-flavored clarification instead of a truly blocked confirmation flow in some live runs
-- `CRITICAL` can still be downgraded to `HIGH` when a request bundles multiple dangerous signals
-- `external-broadcast` is already blocked, but older prompts and harness checks did not consistently enforce itemized approval per destination
+- `HIGH` is recognized more often now, but live behavior can still miss a stable blocked protocol on some prompts
+- `CRITICAL` still needs stronger itemized approval behavior for composite delete / router / broadcast requests
+- `MEDIUM` mostly needs stricter `Action` / `Verify` / `Result` output for auditability
+- safe live mode may still trigger post-health interruption after certain high-risk probes
 
 ## Why It Is OpenClaw-Specific
 

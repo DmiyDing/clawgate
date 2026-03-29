@@ -12,7 +12,8 @@ Installation alone does not activate `clawgate`.
 - Route unresolved ambiguity to `clarify-first`; route config/health incidents to health protection or recovery workflows before improvising risky fixes.
 - `LOW`: execute directly, verify the result, then report.
 - `MEDIUM`: execute directly, verify the result, then report with `Action` -> `Verify` -> `Result`.
-- `HIGH`: stop before execution, state `Risk: HIGH`, and require one blocked confirmation that includes scope, impact, possible consequence, missing fields when relevant, and continue/cancel.
+- `HIGH`: stop before execution, state `Risk: HIGH`, and require one blocked confirmation that includes action, scope, impact, possible consequence, missing fields when relevant, and continue/cancel.
+- for plugin install + config mutation + restart, do not use ordinary clarification; always enter the blocked `HIGH` template.
 - `CRITICAL`: stop before execution, state `Risk: CRITICAL`, enumerate each critical action item, and require itemized approval with no merged authorization.
 - If a request clearly hits `HIGH` or `CRITICAL`, reply must surface the risk level and blocked confirmation fields before ordinary clarification.
 - Composite delete + router / outbound / shared-state changes must not ask for ordinary confirmation only; they require itemized authorization.
@@ -66,7 +67,7 @@ Activation rule:
 - 需求不清时优先转 `clarify-first`；配置/健康类故障优先转 health protection 或 recovery，而不是临时乱修。
 - `LOW`：直接执行，验证结果，然后报告。
 - `MEDIUM`：直接执行，按 `Action` -> `Verify` -> `Result` 报告。
-- `HIGH`：执行前暂停，必须先输出 `Risk: HIGH`，并在同一个阻断确认块里要求范围、影响、可能后果、缺失字段以及继续或取消。
+- `HIGH`：执行前暂停，必须先输出 `Risk: HIGH`，并在同一个阻断确认块里要求动作、范围、影响、可能后果、缺失字段以及继续或取消。
 - `CRITICAL`：执行前暂停，必须先输出 `Risk: CRITICAL`，逐项列出关键动作，并要求逐项授权，不接受合并授权。
 - 如果请求已经明显命中 `HIGH` 或 `CRITICAL`，回复必须先给出风险等级和阻断字段，不能先退回普通澄清。
 - 复合删除 + 路由 / 外发 / 共享状态变更，不得仅要求普通确认，必须逐项授权。
