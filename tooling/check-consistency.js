@@ -49,6 +49,10 @@ function readFile(filePath) {
   }
 }
 
+function extractMarkdownSnippets(content) {
+  return [...content.matchAll(/```(?:md|markdown)?[ \t]*\n([\s\S]*?)\n```/gi)].map((match) => match[1]);
+}
+
 // Check 1: SKILL.md Core Policy line should have all HIGH fields
 function checkSkillCorePolicy(content) {
   // Look for the HIGH line in Core Policy section
@@ -127,6 +131,12 @@ function checkSkillExecutionStrategy(content) {
 
 // Check 3: agents-snippet.md HIGH line
 function checkAgentsSnippet(content) {
+  const snippets = extractMarkdownSnippets(content);
+  if (snippets.length !== 2) {
+    fail(`agents-snippet.md should contain exactly 2 fenced snippets (English + Chinese), found ${snippets.length}`);
+    return false;
+  }
+
   const highLineMatch = content.match(/`HIGH`:[^\n]*/);
   if (!highLineMatch) {
     fail("agents-snippet.md: Cannot find HIGH line");

@@ -53,6 +53,67 @@ Authorization window rule:
 Activation rule:
 - installing the repository does not activate the policy
 - activation requires this snippet, or an equivalent rule, to be added manually to the always-injected entry point
+
+Canonical reply blocks:
+
+- `MEDIUM` execution results must start with this exact three-part shape:
+
+    Action
+    [what changed]
+    Verify
+    [how it was checked]
+    Result
+    [final state]
+
+- `HIGH` plugin install + config mutation + restart must start with this blocked block and nothing before it:
+
+    Risk: HIGH
+    Action
+    Install the named plugin, mutate `plugins.entries`, and restart the gateway
+    Scope: plugin install + `plugins.entries` mutation + gateway restart on the named target
+    Impact: OpenClaw runtime wiring and gateway health may change
+    Possible Consequence: a bad install, config mutation, or restart can leave the instance unhealthy
+    Continue or Cancel: continue or cancel
+    Missing Fields:
+    - [list only when relevant]
+    Blocked Until: explicit continue/cancel confirmation is given for this exact action
+
+- Incomplete `HIGH` plugin install must stay in this blocked shape instead of free-form clarification:
+
+    Risk: HIGH
+    Action
+    Install one plugin, mutate `plugins.entries`, and restart the gateway
+    Missing Fields:
+    - plugin source
+    - plugin id
+    - install method
+    Blocked Until: the exact missing information is provided and the exact action receives explicit continue/cancel confirmation
+    Continue or Cancel: continue or cancel
+
+- `CRITICAL` shared delete + router mutation must start with this itemized block and nothing before it:
+
+    Risk: CRITICAL
+    Critical Action Items:
+    Item 1: Delete shared user-data directory
+    Item 2: Rotate shared router configuration
+    Authorization Granularity: approve each item separately; do not merge authorization across items
+    Approve Each Item: reply item-by-item with approve or cancel
+    Continue or Cancel: continue or cancel
+    Blocked Until: each item receives separate approval or cancellation
+
+- `CRITICAL` external broadcast must use destination-level approval:
+
+    Risk: CRITICAL
+    Destinations:
+    - customer mailing list `A`
+    - public channel `B`
+    Audience:
+    - customers in mailing list `A`
+    - viewers in public channel `B`
+    Authorization Granularity: approve each destination separately
+    Approve Each Destination: reply destination-by-destination with approve or cancel
+    Continue or Cancel: continue or cancel
+    Blocked Until: each destination receives separate approval or cancellation
 ```
 
 ---
@@ -111,4 +172,65 @@ OpenClaw 特定升级规则：
 激活规则：
 - 安装仓库不等于激活策略
 - 激活需要将此片段或等效规则手动添加到常驻入口
+
+规范回复骨架：
+
+- `MEDIUM` 的执行结果必须从以下三段式开始：
+
+    Action
+    [what changed]
+    Verify
+    [how it was checked]
+    Result
+    [final state]
+
+- `HIGH` 的插件安装 + 配置变更 + 重启，必须先输出这个阻断块，前面不能再有别的说明：
+
+    Risk: HIGH
+    Action
+    Install the named plugin, mutate `plugins.entries`, and restart the gateway
+    Scope: plugin install + `plugins.entries` mutation + gateway restart on the named target
+    Impact: OpenClaw runtime wiring and gateway health may change
+    Possible Consequence: a bad install, config mutation, or restart can leave the instance unhealthy
+    Continue or Cancel: continue or cancel
+    Missing Fields:
+    - [list only when relevant]
+    Blocked Until: explicit continue/cancel confirmation is given for this exact action
+
+- 信息不完整但已命中 `HIGH` 的插件安装，必须保持在这个阻断块内，不能退回自由提问：
+
+    Risk: HIGH
+    Action
+    Install one plugin, mutate `plugins.entries`, and restart the gateway
+    Missing Fields:
+    - plugin source
+    - plugin id
+    - install method
+    Blocked Until: the exact missing information is provided and the exact action receives explicit continue/cancel confirmation
+    Continue or Cancel: continue or cancel
+
+- `CRITICAL` 的共享删除 + 路由变更，必须先输出这个逐项授权块，前面不能再有别的说明：
+
+    Risk: CRITICAL
+    Critical Action Items:
+    Item 1: Delete shared user-data directory
+    Item 2: Rotate shared router configuration
+    Authorization Granularity: approve each item separately; do not merge authorization across items
+    Approve Each Item: reply item-by-item with approve or cancel
+    Continue or Cancel: continue or cancel
+    Blocked Until: each item receives separate approval or cancellation
+
+- `CRITICAL` 的外部广播必须逐目的地授权：
+
+    Risk: CRITICAL
+    Destinations:
+    - customer mailing list `A`
+    - public channel `B`
+    Audience:
+    - customers in mailing list `A`
+    - viewers in public channel `B`
+    Authorization Granularity: approve each destination separately
+    Approve Each Destination: reply destination-by-destination with approve or cancel
+    Continue or Cancel: continue or cancel
+    Blocked Until: each destination receives separate approval or cancellation
 ```
