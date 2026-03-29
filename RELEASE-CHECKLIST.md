@@ -12,6 +12,12 @@ Use this before publishing or re-installing `clawgate` into a live OpenClaw envi
 6. **OpenClaw acceptance**: Run through LOW/MEDIUM/HIGH/CRITICAL behavior checks
 7. **Version bump**: Update SKILL.md frontmatter, run `clawhub publish`
 
+Release gates that must pass before publish:
+- `activation:strict` must report `ACTIVE`
+- the workspace skill path must not be a symlink realpath that OpenClaw can skip
+- `plugin-install-config-restart` must not return an ordinary clarification-style reply
+- `shared-delete-router-rotate` must not return `HIGH`
+
 ## Repository Checks
 
 - Run `npm run validate`
@@ -52,6 +58,7 @@ Use `npm run validate:activation` (warn-only, always exits 0) for local checks.
 - Confirm the active skill path you intend OpenClaw to use
 - Confirm `AGENTS.md` or the real always-injected entry point contains the exact activation snippet
 - Confirm there is not a second stale copy under `~/.openclaw/skills/clawgate`
+- Confirm the active workspace skill path is a real directory copy, not a symlink realpath
 - Confirm plugin failure guidance still defaults to stop-and-route-to-recovery
 - Confirm the active single-instance policy, if used, still matches [`single-instance-profile.md`](./clawgate/references/single-instance-profile.md)
 

@@ -27,7 +27,7 @@ const files = {
 
 // Expected confirmation fields (canonical)
 const EXPECTED_HIGH_FIELDS = ["scope", "impact", "consequence", "continue"];
-const EXPECTED_CRITICAL_FIELDS = ["critical", "scope", "impact", "consequence", "authorization", "continue"];
+const EXPECTED_CRITICAL_FIELDS = ["critical", "authorization", "approve", "continue", "blocked"];
 
 function fail(message) {
   console.error(`consistency-check: FAIL - ${message}`);
@@ -82,8 +82,7 @@ function checkSkillCorePolicy(content) {
 
 // Check 2: SKILL.md HIGH Execution Strategy should have all fields
 function checkSkillExecutionStrategy(content) {
-  // Look for the HIGH confirmation list
-  const highSectionMatch = content.match(/### HIGH[\s\S]*?Require second confirmation that explicitly covers:\s*([\s\S]*?)(?=\n\n|Do not continue)/);
+  const highSectionMatch = content.match(/### HIGH[\s\S]*?The `HIGH` reply must follow this protocol:\s*([\s\S]*?)(?=\n\nDo not continue)/);
   if (!highSectionMatch) {
     fail("SKILL.md: Cannot find HIGH Execution Strategy section");
     return false;
@@ -214,7 +213,7 @@ function checkCriticalCoverage(content, agentsContent, templatesContent, riskMat
     ok = false;
   }
 
-  const criticalSectionMatch = content.match(/### CRITICAL[\s\S]*?Require itemized confirmation that explicitly covers:\s*([\s\S]*?)(?=\n\n|Do not collapse)/);
+  const criticalSectionMatch = content.match(/### CRITICAL[\s\S]*?The `CRITICAL` reply must follow this protocol:\s*([\s\S]*?)(?=\n\nThe critical action items must be concrete authorization targets)/);
   if (!criticalSectionMatch) {
     fail("SKILL.md: Cannot find CRITICAL Execution Strategy section");
     ok = false;
@@ -260,7 +259,7 @@ function checkCriticalCoverage(content, agentsContent, templatesContent, riskMat
     ok = false;
   } else {
     const behavior = criticalBehaviorMatch[1].toLowerCase();
-    const missing = ["item", "scope", "impact", "consequence", "authorization", "continue"].filter(
+    const missing = ["item", "authorization", "approve", "continue", "blocked"].filter(
       (token) => !behavior.includes(token)
     );
     if (missing.length > 0) {

@@ -6,7 +6,7 @@ This matrix is for OpenClaw execution governance, not broad requirement discover
 
 - `LOW`: execute directly, then verify and report
 - `MEDIUM`: execute directly, then verify and report
-- `HIGH`: force explicit second confirmation before any execution
+- `HIGH`: force explicit blocked confirmation before any execution
 - `CRITICAL`: force itemized confirmation; do not merge authorization across actions
 
 ## LOW
@@ -65,11 +65,14 @@ Default examples:
 Behavior:
 - stop before execution
 - state `Risk: HIGH`
+- state `Action`
 - state `Scope`
 - state `Impact`
 - state `Possible Consequence`
+- state `Continue or Cancel`
 - if fields are missing, list them inside the blocked confirmation block instead of switching to normal Q&A
-- ask `Continue or Cancel`
+- state `Missing Fields`
+- state `Blocked Until`
 - require explicit approval for the exact high-risk action
 - state that execution is blocked until missing fields and approval are both supplied
 
@@ -86,14 +89,14 @@ Behavior:
 - stop before execution
 - state `Risk: CRITICAL`
 - enumerate each critical action item
-- state `Scope`
-- state `Impact`
-- state `Possible Consequence`
-- confirm audience groups or channels when outbound delivery is involved
-- confirm authorization granularity
+- state `Authorization Granularity`
 - require `Approve Each Item`
-- ask `Continue or Cancel`
+- state `Continue or Cancel`
+- state `Blocked Until`
+- for destination-level outbound delivery, state `Destinations`, `Audience`, and `Message Content`
 - never accept one merged approval for future critical follow-up actions
+- merged approval is not accepted
+- if three or more composite escalation signals are present, force itemized approval even when the request asks for one approval only
 
 ## OpenClaw Escalation Rules
 
@@ -109,7 +112,8 @@ Classification rules:
 - reading these surfaces without mutation stays `LOW`
 - changing a non-sensitive single-instance surface with backup + validation + rollback may be `MEDIUM`
 - changing one of these surfaces is otherwise at least `HIGH`
-- plugin install/remove plus config change plus restart is always `HIGH`
+- plugin install/remove plus config change plus restart is always blocked `HIGH`
+- plugin install/remove plus config change plus restart must not proceed before explicit continue/cancel confirmation
 - if the request semantically includes plugin install + `plugins.entries` mutation + gateway restart, classify as blocked `HIGH` even when plugin name, source, or version is incomplete
 - incomplete plugin install + config mutation + restart must stay blocked `HIGH`; do not reduce it to ordinary clarification-first
 - shared-router mutation, auth/token mutation, or cross-instance mutation is `CRITICAL`
@@ -117,11 +121,12 @@ Classification rules:
 
 Composite escalation rule:
 - the following signals each count as one critical-escalation hit:
-  - shared data deletion
+  - shared delete
   - shared router mutation
   - everyone / all users / all channels scope
   - cross-instance impact
 - if any request hits two or more of those signals, force `CRITICAL`
+- if any request hits three or more of those signals, force itemized approval
 
 ## Recoverability Downgrade Rule
 
@@ -182,6 +187,7 @@ Boundary table:
 - internal group / internal webhook / internal email -> `MEDIUM`
 - one external customer or one external tenant -> `HIGH`
 - customer blast, public channel, or broadcast -> `CRITICAL`
+- every / all customers / public channels -> `CRITICAL`
 
 ### Core configuration escalates
 

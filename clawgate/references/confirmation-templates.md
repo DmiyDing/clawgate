@@ -10,7 +10,7 @@ Use these machine-readable fields whenever the user, harness, or downstream syst
 - `continue_or_cancel`
 - `itemized_actions`
 
-`HIGH` and `CRITICAL` should prefer the machine-readable fields plus the human-readable headings in the same block.
+`HIGH` and `CRITICAL` must output the machine-readable fields plus the human-readable headings in the same block.
 `LOW` and `MEDIUM` may stay human-readable unless a machine-readable consumer is explicitly in play.
 
 ## LOW
@@ -40,18 +40,32 @@ Optional machine-readable fields when requested:
 - `risk_level: MEDIUM`
 - `blocked: false`
 
+### Result Template
+
+```markdown
+Action
+[what changed]
+Verify
+[how it was checked]
+Result
+[final state]
+```
+
 ## HIGH
 
 Use a blocked confirmation with this fixed field order:
 - `Risk: HIGH`
+- `Action`
 - `Scope`
 - `Impact`
 - `Possible Consequence`
-- `Missing Fields`
 - `Continue or Cancel`
+- `Missing Fields`
+- `Blocked Until`
 
 Rules:
 - Start by explicitly stating `Risk: HIGH`.
+- Do not use ordinary clarification instead of this template for plugin install + config mutation + restart.
 - If any information is missing, keep the missing-fields prompt inside the blocked confirmation block.
 - Do not degrade into ordinary Q&A or clarification-first style questioning.
 - State authorization granularity explicitly: this approval covers this exact high-risk action only.
@@ -72,19 +86,22 @@ Risk: HIGH
 risk_level: HIGH
 blocked: true
 approval_mode: explicit_confirmation
+Action
+Install the named plugin, mutate `plugins.entries`, and restart the gateway
 Scope: install plugin + mutate `plugins.entries` + restart gateway on the named target
 Impact: OpenClaw runtime wiring and gateway health may change for this target
 Possible Consequence: a bad install, config mutation, or restart can leave the instance unhealthy
+Continue or Cancel: continue or cancel
+continue_or_cancel: continue or cancel
 missing_fields:
 - plugin source
 - target instance
 Missing Fields:
 - plugin source
 - target instance
-continue_or_cancel: continue or cancel
+Blocked Until: explicit continue/cancel confirmation is given for this exact action
 itemized_actions: []
 Authorization Granularity: this approval covers this exact high-risk action only, not later restart / delete / outbound send / paid-loop steps outside the named scope
-Continue or Cancel: continue or cancel
 ```
 
 ### Chinese
@@ -94,19 +111,22 @@ Risk: HIGH
 risk_level: HIGH
 blocked: true
 approval_mode: explicit_confirmation
+Action
+安装命名插件、修改 `plugins.entries`、并重启 gateway
 Scope: 在指定目标上安装插件 + 修改 `plugins.entries` + 重启 gateway
 Impact: OpenClaw 运行时接线与 gateway 健康状态可能发生变化
 Possible Consequence: 如果安装、配置或重启判断错误，实例可能变得不健康
+Continue or Cancel: continue or cancel
+continue_or_cancel: continue or cancel
 missing_fields:
 - 插件来源
 - 目标实例
 Missing Fields:
 - 插件来源
 - 目标实例
-continue_or_cancel: continue or cancel
+Blocked Until: 已对这一组高风险动作给出明确 continue/cancel 之前不得执行
 itemized_actions: []
 Authorization Granularity: 本次授权仅覆盖这一组已命名的高风险动作，不覆盖后续新增的重启 / 删除 / 外发 / 付费循环
-Continue or Cancel: continue or cancel
 ```
 
 ### High-Risk But Information Is Missing
@@ -118,21 +138,23 @@ Risk: HIGH
 risk_level: HIGH
 blocked: true
 approval_mode: explicit_confirmation
+Action
+Install one plugin, mutate `plugins.entries`, and restart the gateway
+Blocked Until: the exact missing information is provided and the exact action receives explicit continue/cancel confirmation
+Continue or Cancel: continue or cancel
+continue_or_cancel: continue or cancel
 missing_fields:
-- plugin name
 - plugin source
-- target instance
+- plugin id
+- install method
 Missing Fields:
-- plugin name
 - plugin source
-- target instance
-Blocked Until: the missing fields are supplied inside this confirmation block and the exact action is explicitly approved
+- plugin id
+- install method
 Scope: plugin install + `plugins.entries` mutation + gateway restart
 Impact: OpenClaw runtime wiring and gateway availability may change
 Possible Consequence: guessing any missing field can break plugin wiring or leave the gateway unhealthy
-continue_or_cancel: continue or cancel
 itemized_actions: []
-Continue or Cancel: continue or cancel
 ```
 
 ## CRITICAL
@@ -140,17 +162,20 @@ Continue or Cancel: continue or cancel
 Use a blocked itemized confirmation with this fixed field order:
 - `Risk: CRITICAL`
 - `Critical Action Items`
-- `Audience Groups`
-- `Channels`
 - `Authorization Granularity`
 - `Approve Each Item`
 - `Continue or Cancel`
+- `Blocked Until`
 
 Rules:
 - Always start by explicitly stating `Risk: CRITICAL`.
 - Never merge approvals for multiple critical items.
 - Use `Approve Each Item` and require a separate approval or cancellation for every numbered item.
 - For broadcast or public-channel work, list each audience or destination separately.
+- Include an explicit refusal block:
+  - `I will not execute this on a general confirmation`
+  - `Merged approval is not accepted`
+  - `Each item must be approved separately`
 
 Required machine-readable fields:
 - `risk_level: CRITICAL`
@@ -171,15 +196,21 @@ blocked: true
 approval_mode: itemized
 missing_fields: []
 Critical Action Items:
-1. delete `A`
-2. switch shared router to `B`
+Item 1: Delete shared user-data directory
+Item 2: Rotate shared router configuration
+Item 3: Notify affected users
 Authorization Granularity: approve each item separately; do not merge authorization across items
 Approve Each Item: reply item-by-item with approve or cancel
-continue_or_cancel: continue or cancel
-itemized_actions:
-- delete `A`
-- switch shared router to `B`
 Continue or Cancel: continue or cancel
+continue_or_cancel: continue or cancel
+Blocked Until: each item receives separate approval or cancellation
+I will not execute this on a general confirmation.
+Merged approval is not accepted.
+Each item must be approved separately.
+itemized_actions:
+- Delete shared user-data directory
+- Rotate shared router configuration
+- Notify affected users
 ```
 
 ### Broadcast / Public Channel Template
@@ -192,22 +223,26 @@ risk_level: CRITICAL
 blocked: true
 approval_mode: itemized
 missing_fields: []
-Critical Action Items:
-1. send to customer mailing list `A`
-2. send to public channel `B`
-Audience Groups:
+Destinations:
+- customer mailing list `A`
+- public channel `B`
+Audience:
 - customers in mailing list `A`
 - viewers in public channel `B`
-Channels:
-- mailing list `A`
-- public channel `B`
-Authorization Granularity: approve each destination separately; no bundled approval for all audiences
-Approve Each Item: reply item-by-item with approve or cancel
+Message Content:
+- [exact announcement text or approved message identifier]
+Authorization Granularity: approve each destination separately; `Approve all external destinations` is not accepted
+Approve Each Item: reply destination-by-destination with approve or cancel
+Approve Each Destination: reply destination-by-destination with approve or cancel
+Continue or Cancel: continue or cancel
 continue_or_cancel: continue or cancel
+Blocked Until: each destination receives separate approval or cancellation
+I will not execute this on a general confirmation.
+Merged approval is not accepted.
+Each item must be approved separately.
 itemized_actions:
 - send to customer mailing list `A`
 - send to public channel `B`
-Continue or Cancel: continue or cancel
 ```
 
 ## OpenClaw-Specific Notes

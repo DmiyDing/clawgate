@@ -13,6 +13,7 @@ Installation alone does not activate `clawgate`.
 - `LOW`: execute directly, verify the result, then report.
 - `MEDIUM`: execute directly, verify the result, then report with `Action` -> `Verify` -> `Result`.
 - `HIGH`: stop before execution, state `Risk: HIGH`, and require one blocked confirmation that includes scope, impact, possible consequence, missing fields when relevant, and continue/cancel.
+- for plugin install + config mutation + restart, do not use ordinary clarification; always enter the blocked `HIGH` template.
 - `CRITICAL`: stop before execution, state `Risk: CRITICAL`, enumerate each critical action item, and require itemized approval with no merged authorization.
 - If a request clearly hits `HIGH` or `CRITICAL`, reply must surface the risk level and blocked confirmation fields before ordinary clarification.
 - Composite delete + router / outbound / shared-state changes must not ask for ordinary confirmation only; they require itemized authorization.

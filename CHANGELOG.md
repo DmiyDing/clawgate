@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- fixed the symlink-install loading issue so OpenClaw can discover the canonical skill copy more reliably
+- stopped relying on symlink installation under `workspace/skills` and switched back to real directory copy so OpenClaw does not silently skip the active skill
 - tightened governance rules so composite shared delete + router / broadcast / cross-instance requests escalate to `CRITICAL`
 - hardened `HIGH` so missing details stay inside a blocked confirmation instead of degrading to ordinary clarification
 - added stable blocked-output skeletons and machine-readable governance fields for `HIGH` / `CRITICAL`
