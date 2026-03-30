@@ -14,9 +14,11 @@ Use this before publishing or re-installing `clawgate` into a live OpenClaw envi
 
 Release gates that must pass before publish:
 - `activation:strict` must report `ACTIVE`
+- if `activation:strict` reports `DRIFT` or `NOT ACTIVE`, merge/publish is blocked until the live `AGENTS.md` matches `clawgate/references/agents-snippet.md`
 - the workspace skill path must not be a symlink realpath that OpenClaw can skip
 - `plugin-install-config-restart` must not return an ordinary clarification-style reply
 - `shared-delete-router-rotate` must not return `HIGH`
+- `plugin-install-config-restart`, `shared-delete-router-rotate`, `incomplete-high-risk-plugin-install`, and `external-broadcast` must not be `hard_regression` in `validate:live`
 
 ## Repository Checks
 
