@@ -198,7 +198,12 @@ function checkAgentsSnippet(content) {
     return false;
   }
 
-  const missingHighForbidden = ["i need to clarify a few things before proceeding", "once confirmed, i'll"].filter(
+  const missingHighForbidden = [
+    "i need to clarify a few things before proceeding",
+    "i need to clarify",
+    "once confirmed, i'll",
+    "then i'll execute",
+  ].filter(
     (token) => !snippetLower.includes(token)
   );
   if (missingHighForbidden.length > 0) {
@@ -246,6 +251,14 @@ function checkConfirmationTemplates(content) {
   // Check for "Next Step" which should be "Continue or Cancel"
   if (templateContent.includes("Next Step") && !templateContent.toLowerCase().includes("continue or cancel")) {
     fail('confirmation-templates.md uses "Next Step" instead of "Continue or Cancel"');
+    return false;
+  }
+
+  const missingTemplateGuards = ["the first visible line must be `risk: high`", "the next heading must be `action`"].filter(
+    (token) => !content.toLowerCase().includes(token)
+  );
+  if (missingTemplateGuards.length > 0) {
+    fail(`confirmation-templates.md HIGH guardrails missing tokens: ${missingTemplateGuards.join(", ")}`);
     return false;
   }
 
@@ -365,6 +378,13 @@ function checkCriticalCoverage(content, agentsContent, templatesContent, riskMat
     const missing = EXPECTED_CRITICAL_FIELDS.filter((field) => !listContent.includes(field));
     if (missing.length > 0) {
       fail(`SKILL.md CRITICAL section missing fields: ${missing.join(", ")}`);
+      ok = false;
+    }
+    const criticalGuards = ["the second visible heading must be `critical action items`", "`required clarifications` is an invalid heading before `critical action items`"].filter(
+      (token) => !content.toLowerCase().includes(token)
+    );
+    if (criticalGuards.length > 0) {
+      fail(`SKILL.md CRITICAL guardrails missing tokens: ${criticalGuards.join(", ")}`);
       ok = false;
     }
   }

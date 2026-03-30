@@ -81,6 +81,7 @@ Behavior:
 - state that execution is blocked until missing fields and approval are both supplied
 - do not output a default execution plan or ordered mutation steps before the blocked `HIGH` block
 - do not use ordinary-clarification openers such as `I need to clarify a few things before proceeding`, `Questions:`, `Please provide...`, `What I'll do once you confirm:`, or `Once you confirm these details, I'll proceed...` once the request has already crossed a blocked `HIGH` boundary
+- invalid `HIGH` outputs also include short openers such as `I need to clarify`, `Questions:`, `Please provide`, `Once you confirm`, and `Then I'll execute`
 - if any forbidden phrase appears before `Continue or Cancel` or `Blocked Until`, the `HIGH` response is invalid
 
 ## CRITICAL
@@ -96,6 +97,7 @@ Behavior:
 - stop before execution
 - state `Risk: CRITICAL`
 - the first visible line must be `Risk: CRITICAL`
+- the second visible heading must be `Critical Action Items`
 - enumerate each critical action item
 - state `Authorization Granularity`
 - require `Approve Each Item`
@@ -107,6 +109,7 @@ Behavior:
 - if three or more composite escalation signals are present, force itemized approval even when the request asks for one approval only
 - do not replace the itemized approval block with a general warning paragraph or bundled execution summary
 - `Please confirm:` by itself is not enough; the itemized block must explicitly include `Authorization Granularity`, `Approve Each Item` or `Approve Each Destination`, `Continue or Cancel`, and `Blocked Until`
+- `Required Clarifications` is invalid before `Critical Action Items`
 
 ## OpenClaw Escalation Rules
 
@@ -128,6 +131,7 @@ Classification rules:
 - incomplete plugin install + config mutation + restart must stay blocked `HIGH`; do not reduce it to ordinary clarification-first
 - incomplete plugin install + config mutation + restart must explicitly state `Missing Fields`, `Blocked Until`, and `Continue or Cancel`
 - plugin install + `plugins.entries` mutation + gateway restart must render the canonical blocked `HIGH` block, not a free-form clarification or a `What I'll do once you confirm` plan
+- plugin-install-config-restart must use the dedicated blocked plugin-install template as the first visible output
 - shared-router mutation, auth/token mutation, or cross-instance mutation is `CRITICAL`
 - if blast radius is unclear, classify as `HIGH` until scope is narrowed
 

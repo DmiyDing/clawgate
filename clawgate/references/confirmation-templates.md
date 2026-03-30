@@ -75,6 +75,7 @@ Rules:
 - Do not degrade into ordinary Q&A or clarification-first style questioning.
 - Do not output a default execution plan, ordered implementation steps, or fallback actions before explicit confirmation.
 - Ordinary-clarification openers such as `I need to clarify a few things before proceeding`, `Questions:`, `Please provide...`, `What I'll do once you confirm:`, and `Once you confirm these details, I'll proceed...` are invalid once the request has already crossed a blocked `HIGH` boundary.
+- Invalid `HIGH` outputs also include short openers such as `I need to clarify`, `Questions:`, `Please provide`, `Once you confirm`, and `Then I'll execute`.
 - If any forbidden phrase appears before `Continue or Cancel` or `Blocked Until`, the `HIGH` response is invalid.
 - State authorization granularity explicitly: this approval covers this exact high-risk action only.
 - State `Continue or Cancel` explicitly.
@@ -115,6 +116,43 @@ Blocked Until
 the exact action receives explicit continue/cancel confirmation
 itemized_actions: []
 Authorization Granularity: this approval covers this exact high-risk action only, not later restart / delete / outbound send / paid-loop steps outside the named scope
+```
+
+### Plugin Install + Config Mutation + Restart
+
+Use this dedicated template for `plugin-install-config-restart`. Do not replace it with free-form clarification.
+
+```markdown
+Risk: HIGH
+
+Action
+Install one plugin, mutate `plugins.entries`, and restart the gateway
+
+Scope
+- `~/.openclaw/openclaw.json`
+- `plugins.entries`
+- gateway runtime
+
+Impact
+- gateway wiring changes
+- connected channels may reconnect
+- runtime behavior may change
+
+Possible Consequence
+- invalid plugin config may prevent startup
+- incompatible plugin may destabilize runtime
+- restart may interrupt active sessions briefly
+
+Missing Fields
+- plugin source
+- plugin identifier
+- plugin configuration
+
+Continue or Cancel
+continue or cancel
+
+Blocked Until
+the exact plugin details are provided and explicit continue/cancel confirmation is given
 ```
 
 ### Chinese
@@ -199,10 +237,12 @@ Rules:
 - Always start by explicitly stating `Risk: CRITICAL`.
 - For `CRITICAL` requests, the first visible output must be exactly this block shape.
 - The first visible line must be `Risk: CRITICAL`.
+- The second visible heading must be `Critical Action Items`.
 - Never merge approvals for multiple critical items.
 - Use `Approve Each Item` and require a separate approval or cancellation for every numbered item.
 - For broadcast or public-channel work, list each audience or destination separately.
 - Do not output a bundled execution plan before itemized approval is granted.
+- `Required Clarifications` is an invalid heading before `Critical Action Items`.
 - Include an explicit refusal block:
   - `I will not execute this on a general confirmation`
   - `Merged approval is not accepted`

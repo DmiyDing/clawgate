@@ -211,6 +211,12 @@ Do not place rationale, clarifying questions, reassurance, or a default executio
 Do not include ordered execution steps, fallback plans, or "I can do X/Y/Z" before explicit confirmation.
 Do not use ordinary-clarification openers such as `I need to clarify a few things before proceeding`, `Questions:`, `Please provide...`, `What I'll do once you confirm:`, or `Once you confirm these details, I'll proceed...`.
 Those patterns are invalid for `HIGH` once the request has already crossed a blocked `HIGH` boundary.
+Invalid `HIGH` outputs include:
+- `I need to clarify`
+- `Questions:`
+- `Please provide`
+- `Once you confirm`
+- `Then I'll execute`
 If any forbidden phrase appears before `Continue or Cancel` or `Blocked Until`, the `HIGH` response is invalid.
 
 Do not continue until the user confirms.
@@ -244,6 +250,7 @@ Keep the reply in the `HIGH` lane and include:
 - Blocked Until
 
 For plugin install + config mutation + restart, this blocked `HIGH` block is mandatory even when plugin source or target details are incomplete.
+For `plugin-install-config-restart`, do not reuse a looser generic clarification flow. The first visible output must be the dedicated blocked plugin-install block.
 
 ### CRITICAL
 
@@ -259,8 +266,10 @@ The `CRITICAL` reply must follow this protocol:
 The first visible block must be this blocked itemized confirmation block.
 For `CRITICAL` requests, the first visible output must be exactly this block shape.
 The first visible line must be `Risk: CRITICAL`.
+The second visible heading must be `Critical Action Items`.
 Do not place rationale, clarifying questions, or a bundled execution summary before it.
 Do not replace itemized approval with a general warning paragraph.
+`Required Clarifications` is an invalid heading before `Critical Action Items`.
 
 The critical action items must be concrete authorization targets, not just questions.
 Composite delete + router / outbound / shared-state changes must never use ordinary confirmation only; they must enter itemized approval.
@@ -343,6 +352,9 @@ continue or cancel
 Blocked Until
 the exact action receives explicit continue/cancel confirmation
 ```
+
+Do not emit anything before this block.
+Do not replace this block with `I need to clarify`, `Please provide`, or `Once you confirm` phrasing.
 
 ### Incomplete HIGH Plugin Install Block
 
