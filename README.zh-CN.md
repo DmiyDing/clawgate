@@ -6,6 +6,28 @@
 
 ---
 
+## 先看这里
+
+如果你只想走最短且正确的接入路径：
+
+1. 把 `clawgate` 安装到当前真实生效的 OpenClaw skills 路径。
+2. 将 [`clawgate/references/agents-snippet.md`](./clawgate/references/agents-snippet.md) 里的准确片段粘贴到你真实 always-injected 的 `AGENTS.md` 或等效 standing-order 入口。
+3. 运行 `npm run validate:activation:strict`。
+4. 运行 `npm run validate`。
+
+如果跳过第 2 步，就只是“装上了”，不是“真正激活了”。
+
+## 搜索关键词
+
+这个仓库适合以下搜索意图：
+
+- OpenClaw 治理 skill
+- OpenClaw 审批策略
+- OpenClaw 确认护栏
+- OpenClaw AGENTS 激活片段
+- OpenClaw 插件安装安全
+- OpenClaw 路由 / 广播授权控制
+
 ## 为什么做它
 
 大多数 Agent 执行治理会在两个方向上出问题：
@@ -60,12 +82,14 @@
 - `HIGH`：必须给出真正阻断的确认块，至少包含 `Risk: HIGH`、`Scope`、`Impact`、`Possible Consequence`、必要时的 `Missing Fields`，以及 `Continue or Cancel`
 - `CRITICAL`：必须逐项授权，并明确授权粒度与 `Approve Each Item`
 
-## 当前已知真实问题
+## 当前状态
 
-这些是当前真实存在的治理缺陷，不是安装问题：
-- `HIGH` 仍可能退化成“带风险语气的澄清”，而不是严格阻断
-- `CRITICAL` 在复合危险操作上仍可能被降成 `HIGH`
-- `external-broadcast` 已能拦住，但旧模板与旧 harness 还没有稳定做到逐目标授权
+当前更准确的理解方式是：
+
+- 只有在真实激活后，runtime 行为才有意义；安装本身不代表治理已经生效
+- `activation:strict` 是注入片段正确性的合并门槛和发布门槛
+- `LOW`、`MEDIUM`、`HIGH`、`CRITICAL` 是否达标，应以真实注入后的 OpenClaw 回复为准，而不是只看仓库文本
+- 如果运行时行为看起来还像旧版本，先修激活漂移，再改 prompt、模板或 harness
 
 ## 它为什么是 OpenClaw 专用
 
@@ -148,7 +172,7 @@
 - `RELEASE-CHECKLIST.md`：公开发布与重装检查清单
 - `CHANGELOG.md`：风险边界与行为变化记录
 
-## 快速接入
+## 安装并激活
 
 ### 1. 安装 skill
 
@@ -214,7 +238,21 @@ git clone git@github.com:DmiyDing/clawgate.git
 把这份准确片段粘贴到你真实使用的 always-injected OpenClaw 入口里。
 不要在 `README` 或 `AGENTS.md` 中再手写第二份“速查版”。
 
-### 5. 用真实 prompt 做烟雾测试
+### 5. 先验证激活，再做其他事
+
+执行：
+
+```bash
+npm run validate:activation:strict
+```
+
+结果解释：
+
+- `ACTIVE`：真实注入块与源片段完全一致
+- `DRIFT`：真实入口里有 clawgate 内容，但与源片段不完全一致
+- `NOT ACTIVE`：真实入口里还没有 clawgate 激活块
+
+### 6. 用真实 prompt 做烟雾测试
 
 建议先测这几类：
 
@@ -225,9 +263,9 @@ git clone git@github.com:DmiyDing/clawgate.git
 - 批量删除 + 共享路由变更，或外部广播外发 -> 应为 `CRITICAL`
 - 让 OpenClaw 安装 skill 并只输出激活片段 -> 不应自动改 `AGENTS.md`
 
-### 6. 手动接入后，让 OpenClaw 做激活验收
+### 7. 手动接入后，让 OpenClaw 做激活验收
 
-### 7. live 验证注意事项
+### 8. live 验证注意事项
 
 - `npm run validate:live` 和 `npm run validate:live:safe` 只做治理行为探测，不应修改你的 OpenClaw 实例
 - `npm run validate:live:mutating` 会包含单实例维护类提示，只应在可回滚、可丢弃的本地实例上运行
@@ -236,7 +274,7 @@ git clone git@github.com:DmiyDing/clawgate.git
 - `validate:live:safe` 不应包含 auth/token 改动或任何可能打断实例连通性的 case
 - 只有真实 always-injected 入口和 `clawgate/references/agents-snippet.md` 完全一致时，`activation:strict` 才会通过
 
-### 8. 当前 live 基线
+### 9. 当前 live 基线
 
 当前建议基线：
 - `low-readonly-openclaw`：激活后应通过
@@ -332,7 +370,7 @@ npm run validate:activation:semantic
 
 CI 用 strict，本地长期维护 AGENTS 时可用 semantic；只要核心治理字段一致，就不会因为轻微措辞不同一直报漂移。
 
-## Live Validation Caveats
+## 验证参考
 
 - live validation 不是 runtime enforcement
 - live validation 依赖当前模型与当下输出风格
@@ -409,6 +447,17 @@ strict gate 最小准备 runbook：
 2. 把 [`agents-snippet.md`](./clawgate/references/agents-snippet.md) 的准确内容粘进去
 3. 确保 canonical 生效 skill 路径存在于 `~/.openclaw/workspace/skills/clawgate`
 4. 在运行 `npm run validate:ci` 之前，先把该生效副本与当前仓库同步
+
+## 排障
+
+- 已安装但没有生效：
+  先运行 `npm run validate:activation:strict`
+- 一直返回 `DRIFT`：
+  不要维护本地缩写版，直接重新粘贴 [`clawgate/references/agents-snippet.md`](./clawgate/references/agents-snippet.md) 的准确片段
+- 运行时看起来还是旧行为：
+  先确认你改的是实际 always-injected 的 `AGENTS.md`，不是陈旧副本或第二份入口
+- 同时存在多个 skill 副本：
+  只保留一个 canonical 生效副本在 `~/.openclaw/workspace/skills/clawgate`
 
 ## 真实验收标准
 
@@ -515,7 +564,7 @@ clawhub publish ./clawgate \
 - 安装不等于激活。
 - OpenClaw 专属风险比普通开发任务更激进地升级。
 
-## 当前状态
+## 项目定位
 
 这个项目应被理解为一个强 skill-layer 的 OpenClaw 执行治理包，而不是“已经解决 runtime 治理”的夸大表述。
 

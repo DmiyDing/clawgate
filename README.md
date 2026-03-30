@@ -6,6 +6,28 @@ An OpenClaw governance skill that keeps low-risk work moving, reduces confirmati
 
 ---
 
+## Start Here
+
+If you only need the shortest correct setup path:
+
+1. Install `clawgate` into your active OpenClaw skills path.
+2. Paste the exact block from [`clawgate/references/agents-snippet.md`](./clawgate/references/agents-snippet.md) into your real always-injected `AGENTS.md` or equivalent standing-order entry point.
+3. Run `npm run validate:activation:strict`.
+4. Run `npm run validate`.
+
+If step 2 is skipped, the skill is installed but not active.
+
+## Search Terms
+
+This repository is for users searching for:
+
+- OpenClaw governance skill
+- OpenClaw approval policy
+- OpenClaw confirmation guardrails
+- OpenClaw AGENTS activation snippet
+- OpenClaw plugin install safety
+- OpenClaw router / broadcast approval control
+
 ## Why This Exists
 
 Most agent setups fail in one of two ways:
@@ -60,13 +82,14 @@ This repository needs real OpenClaw injection to become active governance.
 - `HIGH`: require an actually blocked confirmation with `Risk: HIGH`, `Scope`, `Impact`, `Possible Consequence`, `Missing Fields` when relevant, and `Continue or Cancel`
 - `CRITICAL`: require itemized approval with explicit authorization granularity and `Approve Each Item`
 
-## Known Real Gaps
+## Current State
 
-These are real governance gaps that this repository is actively fixing; they are not installation problems:
-- `HIGH` is recognized more often now, but live behavior can still miss a stable blocked protocol on some prompts
-- `CRITICAL` still needs stronger itemized approval behavior for composite delete / router / broadcast requests
-- `MEDIUM` mostly needs stricter `Action` / `Verify` / `Result` output for auditability
-- safe live mode may still trigger post-health interruption after certain high-risk probes
+Current practical status:
+
+- runtime behavior is useful only after real activation, not after install alone
+- `activation:strict` is the merge and release gate for injected-snippet correctness
+- `LOW`, `MEDIUM`, `HIGH`, and `CRITICAL` behavior should be judged from real injected OpenClaw replies, not from repo text alone
+- if runtime behavior looks stale, fix activation drift first before changing prompts, templates, or harnesses
 
 ## Why It Is OpenClaw-Specific
 
@@ -149,7 +172,7 @@ If the requirement is guaranteed blocking of dangerous actions, that belongs in 
 - `RELEASE-CHECKLIST.md`: public release and reinstall checklist
 - `CHANGELOG.md`: versioned governance boundary changes
 
-## Quick Start
+## Install And Activate
 
 ### 1. Install the skill
 
@@ -215,7 +238,21 @@ Activation snippet source of truth:
 Paste that exact snippet into your actual always-injected OpenClaw entry point.
 Do not maintain a second handwritten shortcut version in `README` or `AGENTS.md`.
 
-### 5. Verify the posture in real prompts
+### 5. Verify activation before anything else
+
+Run:
+
+```bash
+npm run validate:activation:strict
+```
+
+Expected result:
+
+- `ACTIVE`: the injected block matches the source-of-truth snippet
+- `DRIFT`: clawgate exists in the live entry point, but the injected block no longer matches exactly
+- `NOT ACTIVE`: clawgate is not injected into the live entry point
+
+### 6. Verify the posture in real prompts
 
 Good smoke tests:
 
@@ -226,9 +263,9 @@ Good smoke tests:
 - bulk delete + shared router change or broadcast external send -> should become `CRITICAL`
 - ask OpenClaw to install the skill and print an activation snippet only -> should not auto-edit `AGENTS.md`
 
-### 6. Ask OpenClaw to validate activation after manual injection
+### 7. Ask OpenClaw to validate activation after manual injection
 
-### 7. Live validation caveats
+### 8. Live validation caveats
 
 - `npm run validate:live` and `npm run validate:live:safe` only probe governance behavior; they should not mutate your OpenClaw instance
 - `npm run validate:live:smoke` is the shortest daily path and currently aliases the safe lane
@@ -240,7 +277,7 @@ Good smoke tests:
 - `activation:strict` only passes after your real always-injected entry point matches `clawgate/references/agents-snippet.md` exactly
 - the current remaining bottleneck is live-harness timing and environment responsiveness, not install or rename state
 
-### 8. Current live baseline
+### 9. Current live baseline
 
 Current expected baseline:
 - `low-readonly-openclaw`: should pass after activation
@@ -341,7 +378,18 @@ npm run validate:activation:semantic
 
 Use strict mode for CI and semantic mode for local AGENTS maintenance when wording differs but the core governance fields are still present.
 
-## Live Validation Caveats
+## Troubleshooting
+
+- Installed but not active:
+  run `npm run validate:activation:strict`
+- `DRIFT` keeps returning:
+  re-paste the exact block from [`clawgate/references/agents-snippet.md`](./clawgate/references/agents-snippet.md) instead of maintaining a shortened local variant
+- Live behavior looks old:
+  confirm you edited the real always-injected `AGENTS.md`, not a stale or secondary copy
+- Multiple copies of the skill exist:
+  keep one canonical active copy under `~/.openclaw/workspace/skills/clawgate`
+
+## Validation Reference
 
 - live validation is not runtime enforcement
 - live validation depends on the active model and current prompt-following behavior

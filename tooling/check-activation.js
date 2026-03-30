@@ -45,10 +45,31 @@ function candidateFromHeader(snippet, actual) {
   return actual;
 }
 
+function extractComparableBlock(expectedSnippet, actualContent) {
+  const expectedLines = normalize(expectedSnippet).split("\n");
+  const actualLines = normalize(actualContent).split("\n");
+  const header = expectedLines[0];
+  const start = actualLines.findIndex((line) => line === header);
+
+  if (start === -1) {
+    return actualContent;
+  }
+
+  let end = actualLines.length;
+  for (let index = start + 1; index < actualLines.length; index += 1) {
+    if (/^##\s+/.test(actualLines[index])) {
+      end = index;
+      break;
+    }
+  }
+
+  return actualLines.slice(start, end).join("\n");
+}
+
 function bestSnippetDiff(snippets, actual) {
   const diffs = snippets
     .map((snippet, index) => {
-      const candidate = candidateFromHeader(snippet, actual);
+      const candidate = extractComparableBlock(snippet, candidateFromHeader(snippet, actual));
       const diff = firstDiffLine(snippet, candidate);
       return {
         index,
