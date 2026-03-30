@@ -36,7 +36,7 @@ Stable execution report:
 - `Verify`
 - `Result`
 - the first visible heading must be `Action`
-- `Verification Complete` and `Done.` are invalid first headings
+- `Verification Complete`, `Verification complete`, and `Done.` are invalid first headings
 - `Updated successfully` and `All files successfully updated` are invalid first openings
 - do not emit any sentence, heading, or summary line before `Action`
 

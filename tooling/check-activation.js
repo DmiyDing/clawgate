@@ -36,10 +36,20 @@ function firstDiffLine(expected, actual) {
   return null;
 }
 
+function candidateFromHeader(snippet, actual) {
+  const header = normalize(snippet).split("\n")[0];
+  const headerIndex = actual.indexOf(header);
+  if (headerIndex >= 0) {
+    return actual.slice(headerIndex);
+  }
+  return actual;
+}
+
 function bestSnippetDiff(snippets, actual) {
   const diffs = snippets
     .map((snippet, index) => {
-      const diff = firstDiffLine(snippet, actual);
+      const candidate = candidateFromHeader(snippet, actual);
+      const diff = firstDiffLine(snippet, candidate);
       return {
         index,
         diff,

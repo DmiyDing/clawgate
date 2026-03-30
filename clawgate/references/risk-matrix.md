@@ -45,7 +45,7 @@ Behavior:
 - do not end the reply with tail offers or meta suggestions (for example: `Next Step`, `If you need, I can...`, `Let me know if you want anything else`); just execute, verify, and report
 - use the stable execution report order `Action` -> `Verify` -> `Result`
 - the first visible `MEDIUM` output must start with `Action`, then `Verify`, then `Result`
-- `Done.`, `Verification complete`, or verification-only summaries are invalid replacements for the required `Action` -> `Verify` -> `Result` structure
+- `Done.`, `Verification Complete`, `Verification complete`, or verification-only summaries are invalid replacements for the required `Action` -> `Verify` -> `Result` structure
 - `Updated successfully` and `All files successfully updated` are invalid openings for `MEDIUM`
 - do not emit any sentence, heading, or summary line before `Action`
 - this rule does not ban explicit structured field names when a template requires them
