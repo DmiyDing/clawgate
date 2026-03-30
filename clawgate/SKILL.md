@@ -197,13 +197,15 @@ The `HIGH` reply must follow this protocol:
 - then output `Scope`
 - then output `Impact`
 - then output `Possible Consequence`
-- then output `Continue or Cancel`
 - if information is missing, append `Missing Fields`
+- then output `Continue or Cancel`
 - if information is missing, also output `Blocked Until`
 
 The first visible block must be this blocked confirmation block.
 Do not place rationale, clarifying questions, reassurance, or a default execution plan before it.
 Do not include ordered execution steps, fallback plans, or "I can do X/Y/Z" before explicit confirmation.
+Do not use ordinary-clarification openers such as `I need to clarify a few things before proceeding`, `Questions:`, `Please provide...`, `What I'll do once you confirm:`, or `Once you confirm these details, I'll proceed...`.
+Those patterns are invalid for `HIGH` once the request has already crossed a blocked `HIGH` boundary.
 
 Do not continue until the user confirms.
 Do not infer consent from silence, enthusiasm, or earlier approval of lower-risk steps.
@@ -220,8 +222,8 @@ Use this field order:
 - Scope
 - Impact
 - Possible Consequence
-- Continue or Cancel
 - Missing Fields
+- Continue or Cancel
 - Blocked Until
 
 If key fields are missing but the request already hits a clear `HIGH` trigger, do not downgrade to ordinary clarification.
@@ -320,13 +322,18 @@ Result
 Risk: HIGH
 Action
 Install the named plugin, mutate `plugins.entries`, and restart the gateway
-Scope: plugin install + `plugins.entries` mutation + gateway restart on the named target
-Impact: OpenClaw runtime wiring and gateway health may change
-Possible Consequence: a bad install, config mutation, or restart can leave the instance unhealthy
-Continue or Cancel: continue or cancel
+Scope
+`~/.openclaw/openclaw.json`, `plugins.entries`, and gateway runtime on the named target
+Impact
+OpenClaw runtime wiring, active channels, and gateway health may change for this target
+Possible Consequence
+A bad install, config mutation, or restart can leave the gateway unhealthy
 Missing Fields:
 - [list only when relevant]
-Blocked Until: explicit continue/cancel confirmation is given for this exact action
+Continue or Cancel
+continue or cancel
+Blocked Until
+the exact action receives explicit continue/cancel confirmation
 ```
 
 ### Incomplete HIGH Plugin Install Block
@@ -335,12 +342,20 @@ Blocked Until: explicit continue/cancel confirmation is given for this exact act
 Risk: HIGH
 Action
 Install one plugin, mutate `plugins.entries`, and restart the gateway
+Scope
+`~/.openclaw/openclaw.json`, `plugins.entries`, and gateway runtime on the named target
+Impact
+OpenClaw runtime wiring and gateway availability may change
+Possible Consequence
+Guessing any missing field can break plugin wiring or leave the gateway unhealthy
 Missing Fields:
 - plugin source
 - plugin id
 - install method
-Blocked Until: the exact missing information is provided and the exact action receives explicit continue/cancel confirmation
-Continue or Cancel: continue or cancel
+Continue or Cancel
+continue or cancel
+Blocked Until
+the exact missing information is provided and the exact action receives explicit continue/cancel confirmation
 ```
 
 ### CRITICAL Shared Delete + Router Block
@@ -350,10 +365,15 @@ Risk: CRITICAL
 Critical Action Items:
 Item 1: Delete shared user-data directory
 Item 2: Rotate shared router configuration
-Authorization Granularity: approve each item separately; do not merge authorization across items
-Approve Each Item: reply item-by-item with approve or cancel
-Continue or Cancel: continue or cancel
-Blocked Until: each item receives separate approval or cancellation
+Authorization Granularity
+Approve each item separately. Do not merge authorization across items.
+Approve Each Item
+- approve item 1 / cancel item 1
+- approve item 2 / cancel item 2
+Continue or Cancel
+continue or cancel
+Blocked Until
+each item receives separate approval or cancellation
 ```
 
 ### CRITICAL External Broadcast Block
@@ -366,10 +386,15 @@ Destinations:
 Audience:
 - customers in mailing list `A`
 - viewers in public channel `B`
-Authorization Granularity: approve each destination separately
-Approve Each Destination: reply destination-by-destination with approve or cancel
-Continue or Cancel: continue or cancel
-Blocked Until: each destination receives separate approval or cancellation
+Authorization Granularity
+Approve each destination separately. Do not merge authorization across destinations.
+Approve Each Destination
+- approve destination A / cancel destination A
+- approve destination B / cancel destination B
+Continue or Cancel
+continue or cancel
+Blocked Until
+each destination receives separate approval or cancellation
 ```
 
 ## Required Skill Collaboration

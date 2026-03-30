@@ -146,10 +146,10 @@ function checkSkillCanonicalBlocks(content) {
   }
 
   const missingTokens = [
-    "Possible Consequence: a bad install, config mutation, or restart can leave the instance unhealthy",
-    "Blocked Until: the exact missing information is provided and the exact action receives explicit continue/cancel confirmation",
-    "Authorization Granularity: approve each item separately; do not merge authorization across items",
-    "Approve Each Destination: reply destination-by-destination with approve or cancel",
+    "A bad install, config mutation, or restart can leave the gateway unhealthy",
+    "the exact missing information is provided and the exact action receives explicit continue/cancel confirmation",
+    "Approve each item separately. Do not merge authorization across items.",
+    "approve destination A / cancel destination A",
   ].filter((token) => !content.includes(token));
 
   if (missingTokens.length > 0) {
@@ -190,7 +190,7 @@ function checkAgentsSnippet(content) {
     return false;
   }
 
-  const missingHighStructure = ["blocked until", "first visible", "default execution plan"].filter(
+  const missingHighStructure = ["blocked until", "first visible", "default execution plan", "questions:"].filter(
     (token) => !snippetLower.includes(token)
   );
   if (missingHighStructure.length > 0) {

@@ -44,6 +44,8 @@ Behavior:
 - do not add permission preamble
 - do not end the reply with tail offers or meta suggestions (for example: `Next Step`, `If you need, I can...`, `Let me know if you want anything else`); just execute, verify, and report
 - use the stable execution report order `Action` -> `Verify` -> `Result`
+- the first visible `MEDIUM` output must start with `Action`, then `Verify`, then `Result`
+- `Done.`, `Verification complete`, or verification-only summaries are invalid replacements for the required `Action` -> `Verify` -> `Result` structure
 - this rule does not ban explicit structured field names when a template requires them
 - execute now
 - verify outcome
@@ -69,13 +71,14 @@ Behavior:
 - state `Scope`
 - state `Impact`
 - state `Possible Consequence`
-- state `Continue or Cancel`
 - if fields are missing, list them inside the blocked confirmation block instead of switching to normal Q&A
 - state `Missing Fields`
+- state `Continue or Cancel`
 - state `Blocked Until`
 - require explicit approval for the exact high-risk action
 - state that execution is blocked until missing fields and approval are both supplied
 - do not output a default execution plan or ordered mutation steps before the blocked `HIGH` block
+- do not use ordinary-clarification openers such as `I need to clarify a few things before proceeding`, `Questions:`, `Please provide...`, `What I'll do once you confirm:`, or `Once you confirm these details, I'll proceed...` once the request has already crossed a blocked `HIGH` boundary
 
 ## CRITICAL
 
@@ -99,6 +102,7 @@ Behavior:
 - merged approval is not accepted
 - if three or more composite escalation signals are present, force itemized approval even when the request asks for one approval only
 - do not replace the itemized approval block with a general warning paragraph or bundled execution summary
+- `Please confirm:` by itself is not enough; the itemized block must explicitly include `Authorization Granularity`, `Approve Each Item` or `Approve Each Destination`, `Continue or Cancel`, and `Blocked Until`
 
 ## OpenClaw Escalation Rules
 
@@ -119,6 +123,7 @@ Classification rules:
 - if the request semantically includes plugin install + `plugins.entries` mutation + gateway restart, classify as blocked `HIGH` even when plugin name, source, or version is incomplete
 - incomplete plugin install + config mutation + restart must stay blocked `HIGH`; do not reduce it to ordinary clarification-first
 - incomplete plugin install + config mutation + restart must explicitly state `Missing Fields`, `Blocked Until`, and `Continue or Cancel`
+- plugin install + `plugins.entries` mutation + gateway restart must render the canonical blocked `HIGH` block, not a free-form clarification or a `What I'll do once you confirm` plan
 - shared-router mutation, auth/token mutation, or cross-instance mutation is `CRITICAL`
 - if blast radius is unclear, classify as `HIGH` until scope is narrowed
 

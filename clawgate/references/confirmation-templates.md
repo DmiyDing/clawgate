@@ -69,6 +69,7 @@ Rules:
 - If any information is missing, keep the missing-fields prompt inside the blocked confirmation block.
 - Do not degrade into ordinary Q&A or clarification-first style questioning.
 - Do not output a default execution plan, ordered implementation steps, or fallback actions before explicit confirmation.
+- Ordinary-clarification openers such as `I need to clarify a few things before proceeding`, `Questions:`, `Please provide...`, `What I'll do once you confirm:`, and `Once you confirm these details, I'll proceed...` are invalid once the request has already crossed a blocked `HIGH` boundary.
 - State authorization granularity explicitly: this approval covers this exact high-risk action only.
 - State `Continue or Cancel` explicitly.
 
@@ -89,18 +90,23 @@ blocked: true
 approval_mode: explicit_confirmation
 Action
 Install the named plugin, mutate `plugins.entries`, and restart the gateway
-Scope: install plugin + mutate `plugins.entries` + restart gateway on the named target
-Impact: OpenClaw runtime wiring and gateway health may change for this target
-Possible Consequence: a bad install, config mutation, or restart can leave the instance unhealthy
-Continue or Cancel: continue or cancel
+Scope
+`~/.openclaw/openclaw.json`, `plugins.entries`, and gateway runtime on the named target
+Impact
+OpenClaw runtime wiring, active channels, and gateway health may change for this target
+Possible Consequence
+A bad install, config mutation, or restart can leave the gateway unhealthy
+Missing Fields:
+- plugin source
+- target instance
+Continue or Cancel
+continue or cancel
 continue_or_cancel: continue or cancel
 missing_fields:
 - plugin source
 - target instance
-Missing Fields:
-- plugin source
-- target instance
-Blocked Until: explicit continue/cancel confirmation is given for this exact action
+Blocked Until
+the exact action receives explicit continue/cancel confirmation
 itemized_actions: []
 Authorization Granularity: this approval covers this exact high-risk action only, not later restart / delete / outbound send / paid-loop steps outside the named scope
 ```
@@ -114,18 +120,23 @@ blocked: true
 approval_mode: explicit_confirmation
 Action
 安装命名插件、修改 `plugins.entries`、并重启 gateway
-Scope: 在指定目标上安装插件 + 修改 `plugins.entries` + 重启 gateway
-Impact: OpenClaw 运行时接线与 gateway 健康状态可能发生变化
-Possible Consequence: 如果安装、配置或重启判断错误，实例可能变得不健康
-Continue or Cancel: continue or cancel
+Scope
+`~/.openclaw/openclaw.json`、`plugins.entries` 与指定目标上的 gateway runtime
+Impact
+OpenClaw 运行时接线、活动通道与 gateway 健康状态可能发生变化
+Possible Consequence
+如果安装、配置或重启判断错误，实例可能变得不健康
+Missing Fields:
+- 插件来源
+- 目标实例
+Continue or Cancel
+continue or cancel
 continue_or_cancel: continue or cancel
 missing_fields:
 - 插件来源
 - 目标实例
-Missing Fields:
-- 插件来源
-- 目标实例
-Blocked Until: 已对这一组高风险动作给出明确 continue/cancel 之前不得执行
+Blocked Until
+已对这一组高风险动作给出明确 continue/cancel 之前不得执行
 itemized_actions: []
 Authorization Granularity: 本次授权仅覆盖这一组已命名的高风险动作，不覆盖后续新增的重启 / 删除 / 外发 / 付费循环
 ```
@@ -141,20 +152,25 @@ blocked: true
 approval_mode: explicit_confirmation
 Action
 Install one plugin, mutate `plugins.entries`, and restart the gateway
-Blocked Until: the exact missing information is provided and the exact action receives explicit continue/cancel confirmation
-Continue or Cancel: continue or cancel
+Scope
+`~/.openclaw/openclaw.json`, `plugins.entries`, and gateway runtime on the named target
+Impact
+OpenClaw runtime wiring and gateway availability may change
+Possible Consequence
+Guessing any missing field can break plugin wiring or leave the gateway unhealthy
+Missing Fields:
+- plugin source
+- plugin id
+- install method
+Continue or Cancel
+continue or cancel
 continue_or_cancel: continue or cancel
 missing_fields:
 - plugin source
 - plugin id
 - install method
-Missing Fields:
-- plugin source
-- plugin id
-- install method
-Scope: plugin install + `plugins.entries` mutation + gateway restart
-Impact: OpenClaw runtime wiring and gateway availability may change
-Possible Consequence: guessing any missing field can break plugin wiring or leave the gateway unhealthy
+Blocked Until
+the exact missing information is provided and the exact action receives explicit continue/cancel confirmation
 itemized_actions: []
 ```
 
@@ -206,11 +222,17 @@ Critical Action Items:
 Item 1: Delete shared user-data directory
 Item 2: Rotate shared router configuration
 Item 3: Notify affected users
-Authorization Granularity: approve each item separately; do not merge authorization across items
-Approve Each Item: reply item-by-item with approve or cancel
-Continue or Cancel: continue or cancel
+Authorization Granularity
+Approve each item separately. Do not merge authorization across items.
+Approve Each Item
+- approve item 1 / cancel item 1
+- approve item 2 / cancel item 2
+- approve item 3 / cancel item 3
+Continue or Cancel
+continue or cancel
 continue_or_cancel: continue or cancel
-Blocked Until: each item receives separate approval or cancellation
+Blocked Until
+each item receives separate approval or cancellation
 I will not execute this on a general confirmation.
 Merged approval is not accepted.
 Each item must be approved separately.
@@ -238,12 +260,19 @@ Audience:
 - viewers in public channel `B`
 Message Content:
 - [exact announcement text or approved message identifier]
-Authorization Granularity: approve each destination separately; `Approve all external destinations` is not accepted
-Approve Each Item: reply destination-by-destination with approve or cancel
-Approve Each Destination: reply destination-by-destination with approve or cancel
-Continue or Cancel: continue or cancel
+Authorization Granularity
+Approve each destination separately. `Approve all external destinations` is not accepted.
+Approve Each Item
+- approve destination A / cancel destination A
+- approve destination B / cancel destination B
+Approve Each Destination
+- approve destination A / cancel destination A
+- approve destination B / cancel destination B
+Continue or Cancel
+continue or cancel
 continue_or_cancel: continue or cancel
-Blocked Until: each destination receives separate approval or cancellation
+Blocked Until
+each destination receives separate approval or cancellation
 I will not execute this on a general confirmation.
 Merged approval is not accepted.
 Each item must be approved separately.
