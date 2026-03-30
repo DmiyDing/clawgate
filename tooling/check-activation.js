@@ -18,6 +18,39 @@ function normalize(text) {
   return text.replace(/\r\n/g, "\n").trim();
 }
 
+function firstDiffLine(expected, actual) {
+  const expectedLines = normalize(expected).split("\n");
+  const actualLines = normalize(actual).split("\n");
+  const max = Math.max(expectedLines.length, actualLines.length);
+
+  for (let index = 0; index < max; index += 1) {
+    if ((expectedLines[index] || "") !== (actualLines[index] || "")) {
+      return {
+        line: index + 1,
+        expected: expectedLines[index] || "(missing)",
+        actual: actualLines[index] || "(missing)",
+      };
+    }
+  }
+
+  return null;
+}
+
+function bestSnippetDiff(snippets, actual) {
+  const diffs = snippets
+    .map((snippet, index) => {
+      const diff = firstDiffLine(snippet, actual);
+      return {
+        index,
+        diff,
+        line: diff?.line || Number.MAX_SAFE_INTEGER,
+      };
+    })
+    .sort((a, b) => a.line - b.line);
+
+  return diffs[0] || null;
+}
+
 function extractSnippets(markdown) {
   // Extract ALL fenced markdown blocks from agents-snippet.md
   // This supports bilingual activation: both English and Chinese snippets are valid
@@ -109,7 +142,12 @@ if (semanticMode && hasSemanticActivation(agentsContent)) {
 // - Partial activation attempt (e.g., copied from README but not from agents-snippet.md)
 // Resolution: Compare against agents-snippet.md and paste the exact snippet.
 if (hasWatchdogBlock) {
-  finish("DRIFT", 2, "clawgate activation content exists but does not exactly match the snippet");
+  const best = bestSnippetDiff(snippets, agentsContent);
+  const diffMessage =
+    best?.diff
+      ? `clawgate activation content exists but does not exactly match the snippet; first differing line ${best.diff.line}: expected "${best.diff.expected}" but found "${best.diff.actual}"`
+      : "clawgate activation content exists but does not exactly match the snippet";
+  finish("DRIFT", 2, diffMessage);
 }
 
 finish("NOT ACTIVE", 3, "no clawgate activation block found in target");

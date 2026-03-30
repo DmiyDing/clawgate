@@ -37,6 +37,7 @@ Stable execution report:
 - `Result`
 - the first visible heading must be `Action`
 - `Verification Complete` and `Done.` are invalid first headings
+- do not emit any sentence, heading, or summary line before `Action`
 
 Optional machine-readable fields when requested:
 - `risk_level: MEDIUM`
